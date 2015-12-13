@@ -4,16 +4,16 @@
  * @class
  * @constructor
  */
-ayce.Sound = function(audioPath) {
+Ayce.Sound = function(audioPath) {
 
     var scope = this;
     this.soundLoaded = false;
-    this.position = new ayce.Vector3(0,0,0);
-    this.orientationFront = new ayce.Vector3(0,0,0);
-    this.orientationUp = new ayce.Vector3(0,1,0);
-    this.listenerPosition = new ayce.Vector3(0,0,0);
-    this.listenerOrientationFront = new ayce.Vector3(0,0,0);
-    this.listenerOrientationUp = new ayce.Vector3(0,1,0);
+    this.position = new Ayce.Vector3(0,0,0);
+    this.orientationFront = new Ayce.Vector3(0,0,0);
+    this.orientationUp = new Ayce.Vector3(0,1,0);
+    this.listenerPosition = new Ayce.Vector3(0,0,0);
+    this.listenerOrientationFront = new Ayce.Vector3(0,0,0);
+    this.listenerOrientationUp = new Ayce.Vector3(0,1,0);
     this.loop = true;
     this.is3D = true;
     this.volume = 1;
@@ -30,7 +30,7 @@ ayce.Sound = function(audioPath) {
 
     /**
      * Loads audio file
-     * @param {ayce.AudioContext} audioContext
+     * @param {Ayce.AudioContext} audioContext
      */
     this.init = function(audioContext){
         context = audioContext.audioContext;

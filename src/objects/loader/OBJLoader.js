@@ -6,17 +6,17 @@
  * Creates new loader for a wavefront object (*.obj)
  * @class
  * @param pathString
- * @returns {ayce.Object3D[]} object
+ * @returns {Ayce.Object3D[]} object
  * @constructor
  */
-ayce.OBJLoader = function (pathString) {
+Ayce.OBJLoader = function (pathString) {
     //Modified version of THREE.js' OBJLoader
     var pathFile = /(.*[\/|\\])(.*)/;
     var path = pathFile.exec(pathString)[1];
     var file = pathFile.exec(pathString)[2];
-    var objTxt = ayce.XMLLoader.getSourceSynch(path+file);
+    var objTxt = Ayce.XMLLoader.getSourceSynch(path+file);
     var mtlName = this.getMtlName(objTxt);
-    var mtlTxt = ayce.XMLLoader.getSourceSynch(path+mtlName);
+    var mtlTxt = Ayce.XMLLoader.getSourceSynch(path+mtlName);
 
 //    console.log("Processing .obj file");
     var objs = this.readObj(objTxt);
@@ -36,7 +36,7 @@ ayce.OBJLoader = function (pathString) {
     return o3Ds;
 };
 
-ayce.OBJLoader.prototype = {
+Ayce.OBJLoader.prototype = {
     /**
      * TODO: Description
      * @param {String} objTxt
@@ -170,7 +170,7 @@ ayce.OBJLoader.prototype = {
             } else if (/^s /.test(line)) {
                 //TODO smooth shading
             } else {
-//                console.log( "ayce.OBJLoader: Unhandled line " + line );
+//                console.log( "Ayce.OBJLoader: Unhandled line " + line );
             }
         }
 
@@ -270,7 +270,7 @@ ayce.OBJLoader.prototype = {
      * @param {} obj
      * @param {} mtl
      * @param {} texturePath
-     * @return {ayce.Object3D} object3D
+     * @return {Ayce.Object3D} object3D
      */
     createO3DFromOBJ: function(obj, mtl, texturePath){
         var verticesO3D = [];
@@ -396,7 +396,7 @@ ayce.OBJLoader.prototype = {
 //        console.log("Highest Index:  " + index);
 //        console.log("---");
 
-        var object3D = new ayce.Object3D();
+        var object3D = new Ayce.Object3D();
         if(verticesO3D.length > 0)  object3D.vertices = verticesO3D;
         if(colorO3D.length > 0)     object3D.colors = colorO3D;
         if(uvO3D.length > 0)        object3D.textureCoords = uvO3D;
@@ -418,10 +418,10 @@ ayce.OBJLoader.prototype = {
     /**
      * TODO: description
      * @param originO3D
-     * @returns {ayce.Object3D}
+     * @returns {Ayce.Object3D}
      */
     copyOBJO3D: function(originO3D){
-        var newO3D = new ayce.Object3D();
+        var newO3D = new Ayce.Object3D();
         if(originO3D.vertices)      newO3D.vertices       = originO3D.vertices.slice();
         if(originO3D.colors)        newO3D.colors         = originO3D.colors.slice();
         if(originO3D.textureCoords) newO3D.textureCoords  = originO3D.textureCoords.slice();

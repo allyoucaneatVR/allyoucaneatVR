@@ -7,12 +7,11 @@
  * @class
  * @constructor
  */
-ayce.CameraManager = function () {
-
+Ayce.CameraManager = function(){
     var scope = this;
 
-    var position = new ayce.Vector3();
-    var orientation = new ayce.Quaternion();
+    var position = new Ayce.Vector3();
+    var orientation = new Ayce.Quaternion();
 
     this.cameraProperties = {
         vrDevice: null,
@@ -23,29 +22,16 @@ ayce.CameraManager = function () {
         renderRectHeight: null
     };
 
-    /**
-     * Returns true if WebVR is being used. Not necessarily the case for Cardboard websites.
-     * @return {Boolean} isVR
-     */
-    this.isInputVR = function(){
-        for(i=0; i<this.modifiers.length; i++){
-            if(this.modifiers[i] instanceof ayce.WebVR){
-                return true;
-            }
-        }
-        return false;
-    };
-
     this.modifiers = [];//(Array.isArray(device)) ? device: [device];
     var isHMDInitialized = false;// !this.isInputVR();
 
     /**
      * Sets up HMD input for the Oculus Rift.
-     * @param {Object} HMDData
+     * @param {Object} hmdData
      */
-    var initHMDControls = function(HMDData){
-        var eyeParamsL = HMDData[0];
-        var eyeParamsR = HMDData[1];
+    var initHMDControls = function(hmdData){
+        var eyeParamsL = hmdData[0];
+        var eyeParamsR = hmdData[1];
 
         scope.cameraProperties.vrDevice = vrDevice;
         scope.cameraProperties.eyeTranslationL = eyeParamsL.eyeTranslation.x;
@@ -60,11 +46,11 @@ ayce.CameraManager = function () {
         scope.cameraProperties.renderRectHeight = Math.max(leftEyeRect.y + leftEyeRect.height, rightEyeRect.y + rightEyeRect.height);
     };
 
-    var i;
     /**
      * Updates position and orientation variables based on all added input methods.
      */
     this.update = function(){
+        var i;
         for(i=0; i<this.modifiers.length; i++){
             this.modifiers[i].update(this.getGlobalRotation().getConjugate());
         }
@@ -73,10 +59,10 @@ ayce.CameraManager = function () {
         orientation.reset();
         
         for(i=0; i<this.modifiers.length; i++){
-            if(!isHMDInitialized && this.modifiers[i] instanceof ayce.WebVR){
-                var HMDData = this.modifiers[i].getHMDData();
-                if(HMDData !== null){
-                    initHMDControls(HMDData);
+            if(!isHMDInitialized && this.modifiers[i] instanceof Ayce.WebVR){
+                var hmdData = this.modifiers[i].getHMDData();
+                if(hmdData !== null){
+                    initHMDControls(hmdData);
                     isHMDInitialized = true;
                 }
             }
@@ -88,7 +74,7 @@ ayce.CameraManager = function () {
 
     /**
      * Returns current global camera position.
-     * @return {ayce.Vector3} position
+     * @return {Ayce.Vector3} position
      */
     this.getGlobalPosition = function(){
         return position;
@@ -96,7 +82,7 @@ ayce.CameraManager = function () {
 
     /**
      * Returns current global camera orientation.
-     * @return {ayce.Quaternion} orientation
+     * @return {Ayce.Quaternion} orientation
      */
     this.getGlobalRotation = function(){
         return orientation;
@@ -106,6 +92,19 @@ ayce.CameraManager = function () {
         this.modifiers = [];
     };
 
+    /**
+     * Returns true if WebVR is being used. Not necessarily the case for Cardboard websites.
+     * @return {Boolean} isVR
+     */
+    this.isInputVR = function(){
+        for(var i=0; i<this.modifiers.length; i++){
+            if(this.modifiers[i] instanceof Ayce.WebVR){
+                return true;
+            }
+        }
+        return false;
+    };
+
 };
 
-ayce.CameraManager.prototype = {};
+Ayce.CameraManager.prototype = {};

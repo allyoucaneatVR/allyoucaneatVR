@@ -3,7 +3,7 @@
  * @class
  * @constructor
  */
-ayce.Gamepad = function () {
+Ayce.Gamepad = function () {
     var scope = this;
 
     this.gamepads = [];
@@ -17,19 +17,19 @@ ayce.Gamepad = function () {
     var translationSpeed = 6.0;
     var rotationSpeed = 3.0;
 
-    var position = new ayce.Vector3();
+    var position = new Ayce.Vector3();
 
-    var velocity = new ayce.Vector3();
+    var velocity = new Ayce.Vector3();
 
     /**
      * Returns position based on gamepad input
-     * @param {ayce.Quaternion} orientation
-     * @return {ayce.Vector3} position
+     * @param {Ayce.Quaternion} orientation
+     * @return {Ayce.Vector3} position
      */
     this.getPosition = function(orientation){
         var speed = 0.02;
         velocity.nullVector();
-        scope.gamepads = ayce.GamepadHandler.getGamepads();
+        scope.gamepads = Ayce.GamepadHandler.getGamepads();
         for(i=0;i<scope.gamepads.length; i++){
             if(scope.gamepads[i]){
                 var translateX = 0;
@@ -46,18 +46,18 @@ ayce.Gamepad = function () {
         return position;
     };
 
-    var xAxis = new ayce.Quaternion();
-    var yAxis = new ayce.Quaternion();
-    var trivialX = new ayce.Vector3(1,0,0);
-    var trivialY = new ayce.Vector3(0,1,0);
+    var xAxis = new Ayce.Quaternion();
+    var yAxis = new Ayce.Quaternion();
+    var trivialX = new Ayce.Vector3(1,0,0);
+    var trivialY = new Ayce.Vector3(0,1,0);
 
     /**
      * Returns orientation based on gamepad input
-     * @return {ayce.Quaternion} xAxis
+     * @return {Ayce.Quaternion} xAxis
      */
     this.getOrientation = function(){
         xAxis.reset();
-        scope.gamepads = ayce.GamepadHandler.getGamepads();
+        scope.gamepads = Ayce.GamepadHandler.getGamepads();
         for(i=0;i<scope.gamepads.length; i++){
             if(scope.gamepads[i]){
                 if(scope.gamepads[i].axes[2]>offset||scope.gamepads[i].axes[2]<-offset)
@@ -79,4 +79,4 @@ ayce.Gamepad = function () {
     };
 };
 
-ayce.Gamepad.prototype = new ayce.CameraModifier();
+Ayce.Gamepad.prototype = new Ayce.CameraModifier();

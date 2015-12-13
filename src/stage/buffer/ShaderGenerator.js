@@ -3,7 +3,7 @@
  * @class
  * @constructor
  */
-ayce.ShaderGenerator = function () {
+Ayce.ShaderGenerator = function () {
 
     this.lightsCount = 4;
     this.texturesCount = 1;
@@ -331,7 +331,7 @@ ayce.ShaderGenerator = function () {
     };
 };
 
-ayce.ShaderGenerator.prototype = {
+Ayce.ShaderGenerator.prototype = {
     /**
      * Returns shader code for lighting calculation per vertex
      * @param {Number} lightsCount

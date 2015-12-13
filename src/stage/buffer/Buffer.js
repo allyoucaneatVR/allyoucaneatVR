@@ -1,15 +1,15 @@
 /**
  * Creates new buffer for object3D
  * @param {Object} gl
- * @param {ayce.Object3D} object3D
- * @param {ayce.Shader} shader
+ * @param {Ayce.Object3D} object3D
+ * @param {Ayce.Shader} shader
  * @param {Array} attributes
  * @param {Array} uniforms
  * @param {Number} drawMode
  * @class
  * @constructor
  */
-ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
+Ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
 
     drawMode = drawMode || gl.TRIANGLES;
 
@@ -266,7 +266,7 @@ ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
     };
 };
 
-ayce.Buffer.prototype = {
+Ayce.Buffer.prototype = {
     /**
      * Adds data to interlaced Array
      * @param {Array} array

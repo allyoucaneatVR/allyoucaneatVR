@@ -1,15 +1,15 @@
 /**
  * Creates new particle system
- * @param {ayce.Scene} scene
- * @param {ayce.Object3D} geometry
+ * @param {Ayce.Scene} scene
+ * @param {Ayce.Object3D} geometry
  * @param {Number} quantity
  * @param {Number} prewarmTime
  * @class
  * @constructor
  */
-ayce.ParticleSystem = function (scene, geometry, quantity, prewarmTime) {
+Ayce.ParticleSystem = function (scene, geometry, quantity, prewarmTime) {
 
-    ayce.Object3D.call(this);
+    Ayce.Object3D.call(this);
 
     var VALUES_PER_POSITION = 3;
     var VALUES_PER_VELOCITY = 3;
@@ -22,7 +22,7 @@ ayce.ParticleSystem = function (scene, geometry, quantity, prewarmTime) {
 
     var i;
     for(i=0;i<quantity;i++){
-        this.particles.push(new ayce.Particle());
+        this.particles.push(new Ayce.Particle());
     }
 
     this.vertices = [];
@@ -168,21 +168,21 @@ ayce.ParticleSystem = function (scene, geometry, quantity, prewarmTime) {
     };
 };
 
-ayce.ParticleSystem.prototype = new ayce.Object3D();
+Ayce.ParticleSystem.prototype = new Ayce.Object3D();
 
 /**
  * Creates new particle
  * @class
  * @constructor
  */
-ayce.Particle = function () {
-    this.position = new ayce.Vector3(0.0, 0.0, 0.0);
-    this.rotationAngle = new ayce.Vector3(0.0, 0.0, 0.0);
-    this.scale = new ayce.Vector3(1, 1, 1);
+Ayce.Particle = function () {
+    this.position = new Ayce.Vector3(0.0, 0.0, 0.0);
+    this.rotationAngle = new Ayce.Vector3(0.0, 0.0, 0.0);
+    this.scale = new Ayce.Vector3(1, 1, 1);
 
     this.vertices = [];
     this.colors = null;
-    this.velocity = new ayce.Vector3(0.0,0.0,0.0);
+    this.velocity = new Ayce.Vector3(0.0,0.0,0.0);
     this.lifetime = 0.0;
     this.gravity = 0.0;
     this.gravityExponent = 1.0;

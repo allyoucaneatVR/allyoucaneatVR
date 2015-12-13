@@ -8,11 +8,11 @@
  * @param canvas
  * @constructor
  */
-ayce.MouseKeyboard = function (canvas, clickElement) {
+Ayce.MouseKeyboard = function (canvas, clickElement) {
 
     var moveSpeed = 0.2;
-    var position = new ayce.Vector3();
-    var rotation = new ayce.Quaternion();
+    var position = new Ayce.Vector3();
+    var rotation = new Ayce.Quaternion();
 
     canvas.requestPointerLock = canvas.requestPointerLock ||
         canvas.mozRequestPointerLock ||
@@ -23,23 +23,23 @@ ayce.MouseKeyboard = function (canvas, clickElement) {
         document.webkitExitPointerLock;
 
 
-    var moveVec = new ayce.Vector3();
+    var moveVec = new Ayce.Vector3();
     var lastUpdate = Date.now();
     
-    var xAxis = new ayce.Quaternion();
-    var yAxis = new ayce.Quaternion();
-    var trivialX = new ayce.Vector3(1,0,0);
-    var trivialY = new ayce.Vector3(0,1,0);
-    var rot = new ayce.Vector2(0,0);
+    var xAxis = new Ayce.Quaternion();
+    var yAxis = new Ayce.Quaternion();
+    var trivialX = new Ayce.Vector3(1,0,0);
+    var trivialY = new Ayce.Vector3(0,1,0);
+    var rot = new Ayce.Vector2(0,0);
     var rotX = 0;
     var rotY = 0;
 
     /**
      * Updates position and orientation based on mouse and keyboard input
-     * @param {ayce.Quaternion} orientation
+     * @param {Ayce.Quaternion} orientation
      */
     this.update = function(orientation){
-        ayce.MouseHandler.setNewFrameTrue();
+        Ayce.MouseHandler.setNewFrameTrue();
         var p = (Date.now()-lastUpdate)/1000;
         
         //Keyboard input
@@ -50,10 +50,10 @@ ayce.MouseKeyboard = function (canvas, clickElement) {
         moveVec.y = 0;
         moveVec.z = 0;
         
-        if (ayce.KeyboardHandler.isKeyDown("W"))   v = moveVec.add(0, 0, -1);
-        if (ayce.KeyboardHandler.isKeyDown("S"))   v = moveVec.add(0, 0, 1);
-        if (ayce.KeyboardHandler.isKeyDown("D"))   v = moveVec.add(1, 0, 0);
-        if (ayce.KeyboardHandler.isKeyDown("A"))   v = moveVec.add(-1, 0, 0);
+        if (Ayce.KeyboardHandler.isKeyDown("W"))   v = moveVec.add(0, 0, -1);
+        if (Ayce.KeyboardHandler.isKeyDown("S"))   v = moveVec.add(0, 0, 1);
+        if (Ayce.KeyboardHandler.isKeyDown("D"))   v = moveVec.add(1, 0, 0);
+        if (Ayce.KeyboardHandler.isKeyDown("A"))   v = moveVec.add(-1, 0, 0);
 
         if (v) {
             v = orientation.getRotatedPoint(v);
@@ -61,7 +61,7 @@ ayce.MouseKeyboard = function (canvas, clickElement) {
         }
         lastUpdate = Date.now();
 
-        rot = ayce.MouseHandler.getMovement();
+        rot = Ayce.MouseHandler.getMovement();
         rotX += rot.x;   // mouse movement in x direction
         rotY += rot.y;   // mouse movement in y direction
 
@@ -104,4 +104,4 @@ ayce.MouseKeyboard = function (canvas, clickElement) {
     };
 };
 
-ayce.MouseKeyboard.prototype = new ayce.CameraModifier();
+Ayce.MouseKeyboard.prototype = new Ayce.CameraModifier();

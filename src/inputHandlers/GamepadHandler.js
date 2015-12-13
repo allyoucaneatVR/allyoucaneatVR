@@ -3,12 +3,12 @@
  * @class
  * @constructor
  */
-ayce.GamepadHandler = function(){};
+Ayce.GamepadHandler = function(){};
 
 /**
  * Returns all detected gamepads
  */
-ayce.GamepadHandler.getGamepads = function(){
+Ayce.GamepadHandler.getGamepads = function(){
     if(APISupported){
         return navigator.getGamepads();
     }

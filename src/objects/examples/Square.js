@@ -1,9 +1,9 @@
 /**
  * jslint browser: true
  */
-ayce.Square = function () {
+Ayce.Square = function () {
 
-    ayce.Object3D.call(this);
+    Ayce.Object3D.call(this);
 
     this.vertices = [
         -1.0, -1.0, 0.0,
@@ -24,4 +24,4 @@ ayce.Square = function () {
     ];
 };
 
-ayce.Square.prototype = ayce.Object3D.prototype;
+Ayce.Square.prototype = Ayce.Object3D.prototype;

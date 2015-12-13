@@ -7,7 +7,7 @@
  * @class
  * @constructor
  */
-ayce.Matrix3 = function () {
+Ayce.Matrix3 = function () {
     this.data = new Float32Array([
         1, 0, 0,
         0, 1, 0,
@@ -15,6 +15,6 @@ ayce.Matrix3 = function () {
     ]);
 };
 
-ayce.Matrix3.prototype = {
+Ayce.Matrix3.prototype = {
 
 };

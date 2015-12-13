@@ -1,5 +1,5 @@
 /*jslint browser: true*/
-/*globals ayce*/
+/*globals Ayce*/
 
 /**
  * Creates a new scene
@@ -7,15 +7,14 @@
  * @param canvas
  * @constructor
  */
-ayce.Scene = function (canvas) {
-
+Ayce.Scene = function (canvas) {
     var scope = this;
     var i = 0;
     var recalcBuffers = true;
-    var camera = new ayce.Camera(new ayce.CameraManager());
-    var audioContext = new ayce.AudioContext();
+    var camera = new Ayce.Camera(new Ayce.CameraManager());
+    var audioContext = new Ayce.AudioContext();
     var renderer = null;
-    var keyboardHandler = new ayce.KeyboardHandler();
+    var keyboardHandler = new Ayce.KeyboardHandler();
     
     this.render = true;
     this.width = canvas.parentNode.clientWidth;
@@ -23,14 +22,11 @@ ayce.Scene = function (canvas) {
 
     var objects = [];
     var transparentObjects = [];
-    var lightContainer = new ayce.LightContainer();
+    var lightContainer = new Ayce.LightContainer();
     var sounds = [];
 
-/*********************************************
- *
- *      Scene initialization
- *
- *********************************************/
+//////////////////////////////////////////////////////////////////////////////////////
+//Scene initialization
 
     /**
      * Should be called on window resize
@@ -54,12 +50,12 @@ ayce.Scene = function (canvas) {
         var m = camera.getManager().modifiers;
         if(m && m.length > 0)throw "Camera modifiers not empty. Please call camera.getManager().clearModifiers() first.";
         
-        if(ayce.HMDHandler.isWebVRReady()){
+        if(Ayce.HMDHandler.isWebVRReady()){
             var cameraController = camera.getManager();
-            cameraController.modifiers.push(new ayce.WebVR());
-            this.setRenderer(new ayce.VRRenderer(canvas, false, cameraController));
+            cameraController.modifiers.push(new Ayce.WebVR());
+            camera.update();
+            this.setRenderer(new Ayce.VRRenderer(canvas, false, cameraController));
             camera.useVR = true;
-            this.resize();
         }
         else{
             console.warn("Browser dosen't support WebVR.");
@@ -85,14 +81,14 @@ ayce.Scene = function (canvas) {
     this.useMotionSensor = function(){
         var m = camera.getManager().modifiers;
         if(m && m.length > 0)throw "Camera modifiers not empty. Please call camera.getManager().clearModifiers() first.";
-        m.push(new ayce.Cardboard());
+        m.push(new Ayce.Cardboard());
     };
 
     /**
      * Sets up rendering for desktop browsers
      */
     this.setRendererDesktop = function(){
-        this.setRenderer(new ayce.Renderer(canvas));
+        this.setRenderer(new Ayce.Renderer(canvas));
         camera.useVR = false;
         this.resize();
     };
@@ -102,14 +98,14 @@ ayce.Scene = function (canvas) {
      * @param {Boolean} distorted
      */
     this.setRendererVR = function(distorted){
-        this.setRenderer(new ayce.VRRenderer(canvas, distorted));
+        this.setRenderer(new Ayce.VRRenderer(canvas, distorted));
         camera.useVR = true;
         this.resize();
     };
 
     /**
      * Sets current renderer
-     * @param {ayce.Renderer} rendererObject
+     * @param {Ayce.Renderer} rendererObject
      */
     this.setRenderer = function(rendererObject){
         var shaders = null;
@@ -125,7 +121,7 @@ ayce.Scene = function (canvas) {
         canvas.style.width = "auto";
         canvas.style.height = "auto";
         
-        if(shaders !== null){
+        if(shaders){
             renderer.getGL().shaders = shaders;
         }
     };
@@ -139,18 +135,17 @@ ayce.Scene = function (canvas) {
 
     //setup scene
     this.setRendererDesktop();
+    
     if(window.attachEvent) {
         window.attachEvent('onresize', this.resize);
     }
     else if(window.addEventListener) {
         window.addEventListener('resize', this.resize, true);
     }
-/*********************************************
- *
- *      Scene Management
- *
- *********************************************/
 
+//////////////////////////////////////////////////////////////////////////////////////
+//Scene Management
+    
     /**
      * Updates input, camera, lights, objects, renderer and sound
      */
@@ -247,18 +242,18 @@ ayce.Scene = function (canvas) {
 
     /**
      * Adds light, object or sound to scene
-     * @param {ayce.Light|ayce.Object3D|ayce.Sound} object
+     * @param {Ayce.Light|Ayce.Object3D|Ayce.Sound} object
      */
     this.addToScene = function (object) {
         
         //Add Light to Scene
-        if (object instanceof ayce.Light) {
+        if (object instanceof Ayce.Light) {
             lightContainer.addLight(object);
             recalcBuffers = true;
         }
         
         //Add O3D to Scene
-        else if (object instanceof ayce.Object3D) {
+        else if (object instanceof Ayce.Object3D) {
             if(!recalcBuffers){
                 object.buffer = renderer.getBuffer(object, lightContainer);
             }
@@ -275,7 +270,7 @@ ayce.Scene = function (canvas) {
         }
         
         //Add Sound
-        else if(object instanceof ayce.Sound){
+        else if(object instanceof Ayce.Sound){
             object.init(audioContext);
             sounds.push(object);
         }
@@ -288,15 +283,15 @@ ayce.Scene = function (canvas) {
 
     /**
      * Removes light, object or sound from scene
-     * @param {ayce.Light|ayce.Object3D|ayce.Sound} object
+     * @param {Ayce.Light|Ayce.Object3D|Ayce.Sound} object
      */
     this.removeFromScene = function (object) {
         //Remove Light from Scene
-        if (object instanceof ayce.Light) {
+        if (object instanceof Ayce.Light) {
             lightContainer.removeLight(object);
         }
         //Remove o3D from Scene
-        else if (object instanceof ayce.Object3D) {
+        else if (object instanceof Ayce.Object3D) {
             for (i=0; i < objects.length; i++) {
                 if (objects[i] === object) {
                     objects.splice(i, 1);
@@ -308,7 +303,7 @@ ayce.Scene = function (canvas) {
                 }
             }
         }
-        else if(object instanceof ayce.Sound){
+        else if(object instanceof Ayce.Sound){
             for (i=0; i < sounds.length; i++) {
                 if (sounds[i] === object) {
                     sounds[i].stop();
@@ -321,15 +316,12 @@ ayce.Scene = function (canvas) {
         }
     };
     
-/*********************************************
- *
- *      Getter / Setter
- *
- *********************************************/
+///////////////////////////////////////////////////////////////////////////////////////
+//Getter / Setter
 
     /**
      * Returns camera object
-     * @returns {ayce.Camera} camera
+     * @returns {Ayce.Camera} camera
      */
     this.getCamera = function () {
         return camera;

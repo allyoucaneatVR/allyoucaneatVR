@@ -7,22 +7,22 @@
  * @class
  * @constructor
  */
-ayce.Object3D = function () {
+Ayce.Object3D = function () {
     var scope = this;
 
     //Position and Rotation of the object
-    this.position = new ayce.Vector3();
-    this.rotation = new ayce.Quaternion();
-    var positionGlobal = new ayce.Vector3();
-    var rotationGlobal = new ayce.Quaternion();
-    var rotationMatrix = new ayce.Matrix4();
+    this.position = new Ayce.Vector3();
+    this.rotation = new Ayce.Quaternion();
+    var positionGlobal = new Ayce.Vector3();
+    var rotationGlobal = new Ayce.Quaternion();
+    var rotationMatrix = new Ayce.Matrix4();
 
-    this.scale = new ayce.Vector3(1, 1, 1);
-    this.modelMatrix = new ayce.Matrix4();
+    this.scale = new Ayce.Vector3(1, 1, 1);
+    this.modelMatrix = new Ayce.Matrix4();
 
     this.parent = null;
-    this.parentPositionWeight = new ayce.Vector3(1, 1, 1);
-    this.parentRotationWeight = new ayce.Vector3(1, 1, 1);
+    this.parentPositionWeight = new Ayce.Vector3(1, 1, 1);
+    this.parentRotationWeight = new Ayce.Vector3(1, 1, 1);
 
     //Arrays for Buffer 
     this.vertices = null;
@@ -67,12 +67,12 @@ ayce.Object3D = function () {
 
     //Movement
     this.gravity = null;
-    this.velocity = new ayce.Vector3();
+    this.velocity = new Ayce.Vector3();
     this.collision = false;
     this.useBoundingSphere = false;
     this.collideWith = null;
     this.onCollision = null;
-    var lastUpdateTime = ayce.Timer.prototype.getCurrentTimeMs();
+    var lastUpdateTime = Ayce.Timer.prototype.getCurrentTimeMs();
     
     //update
     this.onUpdate = null;
@@ -120,9 +120,9 @@ ayce.Object3D = function () {
         var b = yMax - yMin;
         var c = zMax - zMin;
 
-        this.boundingBox = new ayce.Geometry.Box(a, b, c);
+        this.boundingBox = new Ayce.Geometry.Box(a, b, c);
         this.boundingBox.position = positionGlobal;
-        this.boundingBox.offset = new ayce.Vector3(xMin, yMin, zMin);
+        this.boundingBox.offset = new Ayce.Vector3(xMin, yMin, zMin);
         this.boundingBox.rotation = rotationGlobal;
         this.boundingBox.scale = this.scale;
     };
@@ -157,18 +157,18 @@ ayce.Object3D = function () {
             if(z > zMax)zMax = z;
             if(z < zMin)zMin = z;
         }
-        var centerPoint =  new ayce.Vector3((xMax+xMin)/2, (yMax+yMin)/2, (zMax+zMin)/2);
+        var centerPoint =  new Ayce.Vector3((xMax+xMin)/2, (yMax+yMin)/2, (zMax+zMin)/2);
 
         var radius = 0;
         for(i=0; i < this.vertices.length; i+=3){
             x = this.vertices[i+0]*this.scale.x;
             y = this.vertices[i+1]*this.scale.y;
             z = this.vertices[i+2]*this.scale.z;
-            var r = ayce.Vector3.prototype.distance(centerPoint, new ayce.Vector3(x, y, z));
+            var r = Ayce.Vector3.prototype.distance(centerPoint, new Ayce.Vector3(x, y, z));
             if(r > radius)radius = r;
         }
 
-        this.boundingSphere = new ayce.Geometry.Sphere(radius);
+        this.boundingSphere = new Ayce.Geometry.Sphere(radius);
         this.boundingSphere.position = positionGlobal;
         this.boundingSphere.offset = centerPoint;
         this.boundingSphere.rotation = rotationGlobal;
@@ -178,7 +178,7 @@ ayce.Object3D = function () {
      * Description
      */
     this.update = function(){
-        var currentTime = ayce.Timer.prototype.getCurrentTimeMs();
+        var currentTime = Ayce.Timer.prototype.getCurrentTimeMs();
         var elapsedTime = currentTime-lastUpdateTime;
 
         //Update Movement
@@ -215,16 +215,16 @@ ayce.Object3D = function () {
                     var collisionCheck;
 
                     if(check.useBoundingSphere && this.useBoundingSphere){
-                        collisionCheck = ayce.Geometry.prototype.sphereSphereCollision(this.boundingSphere, check.boundingSphere);
+                        collisionCheck = Ayce.Geometry.prototype.sphereSphereCollision(this.boundingSphere, check.boundingSphere);
                     }
                     else if(check.useBoundingSphere){
-                        collisionCheck = ayce.Geometry.prototype.boxSphereCollision(this.boundingBox, check.boundingSphere, true);
+                        collisionCheck = Ayce.Geometry.prototype.boxSphereCollision(this.boundingBox, check.boundingSphere, true);
                     }
                     else if(this.useBoundingSphere){
-                        collisionCheck = ayce.Geometry.prototype.boxSphereCollision(check.boundingBox, this.boundingSphere);
+                        collisionCheck = Ayce.Geometry.prototype.boxSphereCollision(check.boundingBox, this.boundingSphere);
                     }
                     else{
-                        collisionCheck = ayce.Geometry.prototype.boxBoxCollision(this.boundingBox, check.boundingBox);
+                        collisionCheck = Ayce.Geometry.prototype.boxBoxCollision(this.boundingBox, check.boundingBox);
                     }
 
                     if(collisionCheck){
@@ -256,8 +256,8 @@ ayce.Object3D = function () {
         if(this.onUpdate)this.onUpdate();
     };
 
-    var poolVec = new ayce.Vector3();
-    var poolQuat = new ayce.Quaternion();
+    var poolVec = new Ayce.Vector3();
+    var poolQuat = new Ayce.Quaternion();
     var calcGlobalPosition = function(){
         if(scope.parent){
             //rotation
@@ -269,7 +269,7 @@ ayce.Object3D = function () {
             rotationGlobal.z = r.z * qW.z;
             rotationGlobal.w = r.w;
             
-            ayce.Quaternion.prototype.copyToQuaternion(rotationGlobal, poolQuat);
+            Ayce.Quaternion.prototype.copyToQuaternion(rotationGlobal, poolQuat);
             rotationGlobal.getConjugate(poolQuat);
             
             rotationGlobal.normalize();
@@ -288,8 +288,8 @@ ayce.Object3D = function () {
             positionGlobal.z = pP.z*pW.z + poolVec.z;
         }
         else{
-            ayce.Vector3.prototype.copyToVector(scope.position, positionGlobal);
-            ayce.Quaternion.prototype.copyToQuaternion(scope.rotation, rotationGlobal);
+            Ayce.Vector3.prototype.copyToVector(scope.position, positionGlobal);
+            Ayce.Quaternion.prototype.copyToQuaternion(scope.rotation, rotationGlobal);
 
         }
     };
@@ -311,7 +311,7 @@ ayce.Object3D = function () {
     };
 };
 
-ayce.Object3D.prototype = {
+Ayce.Object3D.prototype = {
     /**
      * Description
      * @param {} attributeName

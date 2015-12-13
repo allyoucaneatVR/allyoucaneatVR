@@ -7,9 +7,9 @@
  * @class
  * @constructor
  */
-ayce.VRSquare = function () {
+Ayce.VRSquare = function () {
 
-    ayce.Object3D.call(this);
+    Ayce.Object3D.call(this);
 
     this.shader = "vr-canvas";
 
@@ -28,4 +28,4 @@ ayce.VRSquare = function () {
     ];
 };
 
-ayce.VRSquare.prototype = new ayce.Object3D();
+Ayce.VRSquare.prototype = new Ayce.Object3D();

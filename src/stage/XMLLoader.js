@@ -7,7 +7,7 @@
  * @class
  * @constructor
  */
-ayce.XMLLoader = function () {
+Ayce.XMLLoader = function () {
 
 };
 
@@ -16,13 +16,13 @@ ayce.XMLLoader = function () {
  * @param {String} url
  * @return {String} response
  */
-ayce.XMLLoader.getSourceSynch = function (url) {
+Ayce.XMLLoader.getSourceSynch = function (url) {
     var request = new XMLHttpRequest();
     request.open("GET", url, false);
     request.send();
     return (request.status == 200) ? request.responseText : null;
 };
 
-ayce.XMLLoader.prototype = {
+Ayce.XMLLoader.prototype = {
 
 };

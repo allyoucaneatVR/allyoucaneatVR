@@ -3,12 +3,12 @@
  * @class
  * @constructor
  */
-ayce.MouseHandler = function(){
+Ayce.MouseHandler = function(){
 
     var scope = this;
 
-    this.addedMovement = new ayce.Vector2(0,0);
-    this.movement = new ayce.Vector2(0,0);
+    this.addedMovement = new Ayce.Vector2(0,0);
+    this.movement = new Ayce.Vector2(0,0);
 
     /**
      * Description
@@ -50,19 +50,19 @@ ayce.MouseHandler = function(){
 };
 
 var mouseHandler = null;
-var lastMovement = new ayce.Vector2(0,0);
-var movement = new ayce.Vector2(0,0);
+var lastMovement = new Ayce.Vector2(0,0);
+var movement = new Ayce.Vector2(0,0);
 var x = 0;
 var y = 0;
 var newFrame = true;
 
 /**
  * Returns mouse movement, regardless if mouse is being moved. Returns movement since last frame
- * @returns {ayce.Vector2}
+ * @returns {Ayce.Vector2}
  */
-ayce.MouseHandler.getMovement = function(){
+Ayce.MouseHandler.getMovement = function(){
     if(mouseHandler === null){
-        mouseHandler = new ayce.MouseHandler();
+        mouseHandler = new Ayce.MouseHandler();
     }
     if(newFrame) {
         if (lastMovement.x - mouseHandler.addedMovement.x === 0) {
@@ -85,6 +85,6 @@ ayce.MouseHandler.getMovement = function(){
 /**
  * Starts new frame for mouse handler. In most cases this should be called once a frame before getMovement is called.
  */
-ayce.MouseHandler.setNewFrameTrue = function(){
+Ayce.MouseHandler.setNewFrameTrue = function(){
     newFrame = true;
 };

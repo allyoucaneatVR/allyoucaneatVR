@@ -47,7 +47,7 @@
                        "src/inputHandlers/HMDHandler.js"
 
                       ],
-			"output": "bin/ayceVR.min.js",
+			"output": "bin/AyceVR.min.js",
 			"generateMap": true,
 			"mangle": true,
 			"isolate": false

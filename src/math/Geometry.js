@@ -7,39 +7,39 @@
  * @class
  * @constructor
  */
-ayce.Geometry = function () {
-    this.position = new ayce.Vector3(0, 0, 0);
-    this.rotation = new ayce.Quaternion();
-    this.scale = new ayce.Vector3(1, 1, 1);
-    this.offset = new ayce.Vector3(0, 0, 0);
+Ayce.Geometry = function () {
+    this.position = new Ayce.Vector3(0, 0, 0);
+    this.rotation = new Ayce.Quaternion();
+    this.scale = new Ayce.Vector3(1, 1, 1);
+    this.offset = new Ayce.Vector3(0, 0, 0);
 };
-ayce.Geometry.prototype = {};
+Ayce.Geometry.prototype = {};
 
 /**
- * Creates box as new ayce.Object3D
+ * Creates box as new Ayce.Object3D
  * @class
  * @constructor
  * @param {Number} a
  * @param {Number} b
  * @param {Number} c
  */
-ayce.Geometry.Box = function (a, b, c) {
-    ayce.Geometry.call(this);
+Ayce.Geometry.Box = function (a, b, c) {
+    Ayce.Geometry.call(this);
 
     this.a = a || 0;
     this.b = b || 0;
     this.c = c || 0;
 
 };
-ayce.Geometry.Box.prototype = new ayce.Geometry();
+Ayce.Geometry.Box.prototype = new Ayce.Geometry();
 /**
- * Returns box geometry as ayce.Object3D
+ * Returns box geometry as Ayce.Object3D
  * @param {Boolean} asWireframe
- * @return {ayce.Object3D} o3D
+ * @return {Ayce.Object3D} o3D
  */
-ayce.Geometry.Box.prototype.getO3D = function (asWireframe) {
+Ayce.Geometry.Box.prototype.getO3D = function (asWireframe) {
 
-    var o3D = new ayce.Object3D();
+    var o3D = new Ayce.Object3D();
     var o = this.offset;
     var a = this.a;
     var b = this.b;
@@ -114,10 +114,10 @@ ayce.Geometry.Box.prototype.getO3D = function (asWireframe) {
 };
 /**
  * Returns true if specified point is within geometry
- * @param {ayce.Vector3} vector3
+ * @param {Ayce.Vector3} vector3
  * @return b1
  */
-ayce.Geometry.Box.prototype.containsPoint = function (vector3) {
+Ayce.Geometry.Box.prototype.containsPoint = function (vector3) {
 
     var scope = this;
 
@@ -137,15 +137,15 @@ ayce.Geometry.Box.prototype.containsPoint = function (vector3) {
         return cross;
     };
 
-    var t1 = calcCorner(new ayce.Vector3(0, 0, 0));
-    //    var t2 = calcCorner(new ayce.Vector3(this.a, 0, 0));
-    var t3 = calcCorner(new ayce.Vector3(0, this.b, 0));
-    var t4 = calcCorner(new ayce.Vector3(this.a, this.b, 0));
+    var t1 = calcCorner(new Ayce.Vector3(0, 0, 0));
+    //    var t2 = calcCorner(new Ayce.Vector3(this.a, 0, 0));
+    var t3 = calcCorner(new Ayce.Vector3(0, this.b, 0));
+    var t4 = calcCorner(new Ayce.Vector3(this.a, this.b, 0));
 
-    var b1 = calcCorner(new ayce.Vector3(0, 0, this.c));
-    var b2 = calcCorner(new ayce.Vector3(this.a, 0, this.c));
-    var b3 = calcCorner(new ayce.Vector3(0, this.b, this.c));
-    var b4 = calcCorner(new ayce.Vector3(this.a, this.b, this.c));
+    var b1 = calcCorner(new Ayce.Vector3(0, 0, this.c));
+    var b2 = calcCorner(new Ayce.Vector3(this.a, 0, this.c));
+    var b3 = calcCorner(new Ayce.Vector3(0, this.b, this.c));
+    var b4 = calcCorner(new Ayce.Vector3(this.a, this.b, this.c));
 
     var top = pointPlane(b3, t3, b4, vector3);
     var bottom = pointPlane(b1, b2, t1, vector3);
@@ -161,25 +161,25 @@ ayce.Geometry.Box.prototype.containsPoint = function (vector3) {
 };
 
 /**
- * Creates sphere geometry as ayce.Object3D
+ * Creates sphere geometry as Ayce.Object3D
  * @class
  * @constructor
  * @param {Number} r
  */
-ayce.Geometry.Sphere = function (r) {
-    ayce.Geometry.call(this);
+Ayce.Geometry.Sphere = function (r) {
+    Ayce.Geometry.call(this);
 
     this.r = r || 0;
 };
-ayce.Geometry.Sphere.prototype = new ayce.Geometry();
+Ayce.Geometry.Sphere.prototype = new Ayce.Geometry();
 /**
- * Returns sphere geometry as ayce.Object3D
+ * Returns sphere geometry as Ayce.Object3D
  * @param {Boolean} asWireframe
  * @param {Number} segments
  * @param {Number} rings
- * @return {ayce.Object3D} o3D
+ * @return {Ayce.Object3D} o3D
  */
-ayce.Geometry.Sphere.prototype.getO3D = function (asWireframe, segments, rings) {
+Ayce.Geometry.Sphere.prototype.getO3D = function (asWireframe, segments, rings) {
     this.scale = null;
     var longitudeBands = segments || 10;
     var latitudeBands = rings || 10;
@@ -190,7 +190,7 @@ ayce.Geometry.Sphere.prototype.getO3D = function (asWireframe, segments, rings) 
 
     var o = this.offset;
 
-    var o3D = new ayce.Object3D();
+    var o3D = new Ayce.Object3D();
     o3D.vertices = [];
     o3D.normals = [];
     o3D.textureCoords = [];
@@ -247,7 +247,7 @@ ayce.Geometry.Sphere.prototype.getO3D = function (asWireframe, segments, rings) 
 };
 
 /**
- * Creates grid of vertices as new ayce.Object3D. If splitSquares is true triangles are created as faces without sharing vertices.
+ * Creates grid of vertices as new Ayce.Object3D. If splitSquares is true triangles are created as faces without sharing vertices.
  * @class
  * @constructor
  * @param {Number} a
@@ -256,8 +256,8 @@ ayce.Geometry.Sphere.prototype.getO3D = function (asWireframe, segments, rings) 
  * @param {Number} ySubdivisions
  * @param {Boolean} splitSquares
  */
-ayce.Geometry.Plane = function (a, b, xSubdivisions, ySubdivisions, splitSquares) {
-    ayce.Geometry.call(this);
+Ayce.Geometry.Plane = function (a, b, xSubdivisions, ySubdivisions, splitSquares) {
+    Ayce.Geometry.call(this);
 
     this.a = a || 0;
     this.b = b || 0;
@@ -266,14 +266,14 @@ ayce.Geometry.Plane = function (a, b, xSubdivisions, ySubdivisions, splitSquares
     this.splitSquares = splitSquares;
 
 };
-ayce.Geometry.Plane.prototype = new ayce.Geometry();
+Ayce.Geometry.Plane.prototype = new Ayce.Geometry();
 /**
- * Returns plane geometry as ayce.Object3D
- * @return {ayce.Object3D} o3D
+ * Returns plane geometry as Ayce.Object3D
+ * @return {Ayce.Object3D} o3D
  */
-ayce.Geometry.Plane.prototype.getO3D = function () {
+Ayce.Geometry.Plane.prototype.getO3D = function () {
 
-    var o3D = new ayce.Object3D();
+    var o3D = new Ayce.Object3D();
     var o = this.offset;
     var a = this.a;
     var b = this.b;
@@ -344,31 +344,31 @@ ayce.Geometry.Plane.prototype.getO3D = function () {
  * @constructor
  * @param {Number} subdivisions
  */
-ayce.Geometry.Icosahedron = function (subdivisions) {
+Ayce.Geometry.Icosahedron = function (subdivisions) {
     this.subdivisions = subdivisions;
-    ayce.Geometry.call(this);
+    Ayce.Geometry.call(this);
 };
-ayce.Geometry.Icosahedron.prototype = new ayce.Geometry();
+Ayce.Geometry.Icosahedron.prototype = new Ayce.Geometry();
 /**
- * Returns icosahedron geometry as ayce.Object3D
- * @return {ayce.Object3D} o3D
+ * Returns icosahedron geometry as Ayce.Object3D
+ * @return {Ayce.Object3D} o3D
  */
-ayce.Geometry.Icosahedron.prototype.getO3D = function () {
+Ayce.Geometry.Icosahedron.prototype.getO3D = function () {
 
-    var o3D = new ayce.Object3D();
+    var o3D = new Ayce.Object3D();
 
-    var golden = new ayce.Vector2(0.5, ((1 + Math.sqrt(5)) / 2) - ((1 + Math.sqrt(5)) / 2) / 2);
+    var golden = new Ayce.Vector2(0.5, ((1 + Math.sqrt(5)) / 2) - ((1 + Math.sqrt(5)) / 2) / 2);
 
-    var a = new ayce.Vector2(
+    var a = new Ayce.Vector2(
         -golden.x,  // left top
         golden.y); // -0.5, 0.9
-    var b = new ayce.Vector2(
+    var b = new Ayce.Vector2(
         golden.x,   // right top
         golden.y);  // 0.5, 0.9
-    var c = new ayce.Vector2(
+    var c = new Ayce.Vector2(
         -golden.x,   // left bottom
         -golden.y);  // -0.5, -0.9
-    var d = new ayce.Vector2(
+    var d = new Ayce.Vector2(
         golden.x,   // right bottom
         -golden.y);  // 0.5, -0.9
 
@@ -478,12 +478,12 @@ ayce.Geometry.Icosahedron.prototype.getO3D = function () {
 
     var unprocessedFaces = [o3D.vertices];
     var recursions = this.subdivisions - 1;
-    a = new ayce.Vector3(0, 0, 0);
-    b = new ayce.Vector3(0, 0, 0);
-    c = new ayce.Vector3(0, 0, 0);
-    var ab = new ayce.Vector3(0, 0, 0);
-    var bc = new ayce.Vector3(0, 0, 0);
-    var ac = new ayce.Vector3(0, 0, 0);
+    a = new Ayce.Vector3(0, 0, 0);
+    b = new Ayce.Vector3(0, 0, 0);
+    c = new Ayce.Vector3(0, 0, 0);
+    var ab = new Ayce.Vector3(0, 0, 0);
+    var bc = new Ayce.Vector3(0, 0, 0);
+    var ac = new Ayce.Vector3(0, 0, 0);
     var dist;
 
     for(var i = 1; i < recursions + 1; i++){
@@ -570,47 +570,47 @@ ayce.Geometry.Icosahedron.prototype.getO3D = function () {
     return o3D;
 };
 
-ayce.Geometry.CollisionMath = {};
-ayce.Geometry.CollisionMath.ObjectPool ={
+Ayce.Geometry.CollisionMath = {};
+Ayce.Geometry.CollisionMath.ObjectPool ={
     corners1: [
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3()
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3()
     ],
     corners2: [
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3()
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3()
     ],
     normals: [
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3(),
-        new ayce.Vector3()
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3(),
+        new Ayce.Vector3()
     ],
-    edgeNormalV1:  new ayce.Vector3(),
-    edgeNormalV2:  new ayce.Vector3()
+    edgeNormalV1:  new Ayce.Vector3(),
+    edgeNormalV2:  new Ayce.Vector3()
 };
 /**
  * TODO: Description
@@ -620,7 +620,7 @@ ayce.Geometry.CollisionMath.ObjectPool ={
  * @param {} addB
  * @param {} addC
  */
-ayce.Geometry.CollisionMath.calcCorner = function (outputVector,boxGeo, addA, addB, addC) {
+Ayce.Geometry.CollisionMath.calcCorner = function (outputVector,boxGeo, addA, addB, addC) {
     outputVector.x = addA ? boxGeo.a : 0;
     outputVector.y = addB ? boxGeo.b : 0;
     outputVector.z = addC ? boxGeo.c : 0;
@@ -637,7 +637,7 @@ ayce.Geometry.CollisionMath.calcCorner = function (outputVector,boxGeo, addA, ad
  * @param {} u
  * @param {} v
  */
-ayce.Geometry.CollisionMath.calcNormal = function (outputVector, s, u, v) {
+Ayce.Geometry.CollisionMath.calcNormal = function (outputVector, s, u, v) {
     var x1 = u.x-s.x,
         y1 = u.y-s.y,
         z1 = u.z-s.z,
@@ -657,8 +657,8 @@ ayce.Geometry.CollisionMath.calcNormal = function (outputVector, s, u, v) {
  * @param {} c2
  * @param {} sP
  */
-ayce.Geometry.CollisionMath.getEdgeNormal = function (v, c1, c2, sP) {
-    var v1 = ayce.Geometry.CollisionMath.ObjectPool.edgeNormalV1;
+Ayce.Geometry.CollisionMath.getEdgeNormal = function (v, c1, c2, sP) {
+    var v1 = Ayce.Geometry.CollisionMath.ObjectPool.edgeNormalV1;
     v1.x = c2.x-c1.x;
     v1.y = c2.y-c1.y;
     v1.z = c2.z-c1.z;
@@ -677,11 +677,11 @@ ayce.Geometry.CollisionMath.getEdgeNormal = function (v, c1, c2, sP) {
  * @param {} box2
  * @return mtd
  */
-ayce.Geometry.prototype.boxBoxCollision = function (box1, box2) {
-    var calcCorner = ayce.Geometry.CollisionMath.calcCorner;
-    var calcNormal = ayce.Geometry.CollisionMath.calcNormal;
+Ayce.Geometry.prototype.boxBoxCollision = function (box1, box2) {
+    var calcCorner = Ayce.Geometry.CollisionMath.calcCorner;
+    var calcNormal = Ayce.Geometry.CollisionMath.calcNormal;
 
-    var corners1 = ayce.Geometry.CollisionMath.ObjectPool.corners1;
+    var corners1 = Ayce.Geometry.CollisionMath.ObjectPool.corners1;
     calcCorner(corners1[0], box1, false, false, false);
     calcCorner(corners1[1], box1, true, false, false);
     calcCorner(corners1[2], box1, false, true, false);
@@ -692,7 +692,7 @@ ayce.Geometry.prototype.boxBoxCollision = function (box1, box2) {
     calcCorner(corners1[6], box1, false, true, true);
     calcCorner(corners1[7], box1, true, true, true);
 
-    var corners2 = ayce.Geometry.CollisionMath.ObjectPool.corners2;
+    var corners2 = Ayce.Geometry.CollisionMath.ObjectPool.corners2;
     calcCorner(corners2[0], box2, false, false, false);
     calcCorner(corners2[1], box2, true, false, false);
     calcCorner(corners2[2], box2, false, true, false);
@@ -703,7 +703,7 @@ ayce.Geometry.prototype.boxBoxCollision = function (box1, box2) {
     calcCorner(corners2[6], box2, false, true, true);
     calcCorner(corners2[7], box2, true, true, true);
 
-    var normals = ayce.Geometry.CollisionMath.ObjectPool.normals;
+    var normals = Ayce.Geometry.CollisionMath.ObjectPool.normals;
     var normalsCount = 6;
     calcNormal(normals[0], corners1[0], corners1[1], corners1[2]);
     calcNormal(normals[1], corners1[0], corners1[4], corners1[2]);
@@ -763,14 +763,14 @@ ayce.Geometry.prototype.boxBoxCollision = function (box1, box2) {
  * @param {} invert
  * @return mtd
  */
-ayce.Geometry.prototype.boxSphereCollision = function (box, sphere, invert) {
+Ayce.Geometry.prototype.boxSphereCollision = function (box, sphere, invert) {
     if(box.a === 0 || box.b === 0 || box.c === 0)invert = true;//TODO fix...
 
-    var calcCorner = ayce.Geometry.CollisionMath.calcCorner;
-    var calcNormal = ayce.Geometry.CollisionMath.calcNormal;
-    var getEdgeNormal = ayce.Geometry.CollisionMath.getEdgeNormal;
+    var calcCorner = Ayce.Geometry.CollisionMath.calcCorner;
+    var calcNormal = Ayce.Geometry.CollisionMath.calcNormal;
+    var getEdgeNormal = Ayce.Geometry.CollisionMath.getEdgeNormal;
 
-    var corners1 = ayce.Geometry.CollisionMath.ObjectPool.corners1;
+    var corners1 = Ayce.Geometry.CollisionMath.ObjectPool.corners1;
     calcCorner(corners1[0], box, false, false, false);
     calcCorner(corners1[1], box, true, false, false);
     calcCorner(corners1[2], box, false, true, false);
@@ -783,7 +783,7 @@ ayce.Geometry.prototype.boxSphereCollision = function (box, sphere, invert) {
 
     var sP = sphere.position.copy().addVector3(sphere.offset);
 
-    var normals = ayce.Geometry.CollisionMath.ObjectPool.normals;
+    var normals = Ayce.Geometry.CollisionMath.ObjectPool.normals;
     var normalsCount = 15;
     calcNormal(normals[0], corners1[0], corners1[1], corners1[2]);
     calcNormal(normals[1], corners1[0], corners1[2], corners1[4]);
@@ -848,7 +848,7 @@ ayce.Geometry.prototype.boxSphereCollision = function (box, sphere, invert) {
  * @param {} sphere2
  * @return Literal
  */
-ayce.Geometry.prototype.sphereSphereCollision = function (sphere1, sphere2) {
+Ayce.Geometry.prototype.sphereSphereCollision = function (sphere1, sphere2) {
 
     var pos1 = sphere1.position.copy().addVector3(sphere1.offset);
     var pos2 = sphere2.position.copy().addVector3(sphere2.offset);

@@ -7,20 +7,20 @@
  * @class
  * @constructor
  */
-ayce.Cardboard = function () {
+Ayce.Cardboard = function () {
     
-    ayce.CameraModifier.call(this);
+    Ayce.CameraModifier.call(this);
     
-    var orientation = new ayce.Quaternion();
+    var orientation = new Ayce.Quaternion();
 
     var degToRad = function(degrees){
         return degrees * Math.PI / 180;
     };
 
     this.update = function(){
-        var alpha = degToRad(-ayce.SensorsHandler.getRoll()+180);
-        var beta = degToRad(-ayce.SensorsHandler.getPitch());
-        var gamma = degToRad(ayce.SensorsHandler.getYaw()+90);
+        var alpha = degToRad(-Ayce.SensorsHandler.getRoll()+180);
+        var beta = degToRad(-Ayce.SensorsHandler.getPitch());
+        var gamma = degToRad(Ayce.SensorsHandler.getYaw()+90);
         var c1 = Math.cos(alpha/2);
         var c2 = Math.cos(beta/2);
         var c3 = Math.cos(gamma/2);
@@ -35,11 +35,11 @@ ayce.Cardboard = function () {
 
     /**
      * Returns current orientation of the device based on accelerometer / gyroscope as a quaternion
-     * @return {ayce.Quaternion} orientation
+     * @return {Ayce.Quaternion} orientation
      */
     this.getOrientation = function(){
         return orientation;
     };
 };
 
-ayce.Cardboard.prototype = new ayce.CameraModifier();
+Ayce.Cardboard.prototype = new Ayce.CameraModifier();

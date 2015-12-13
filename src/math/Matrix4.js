@@ -7,7 +7,7 @@
  * @class
  * @constructor
  */
-ayce.Matrix4 = function () {
+Ayce.Matrix4 = function () {
     this.data = new Float32Array([
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -22,10 +22,10 @@ ayce.Matrix4 = function () {
  * @param {Number} aspect
  * @param {Number} near
  * @param {Number} far
- * @return {ayce.Matrix4} m
+ * @return {Ayce.Matrix4} m
  */
-ayce.Matrix4.makePerspective = function (fieldOfView, aspect, near, far) {
-    var m = new ayce.Matrix4();
+Ayce.Matrix4.makePerspective = function (fieldOfView, aspect, near, far) {
+    var m = new Ayce.Matrix4();
     var radians = fieldOfView / 2.0 * Math.PI / 180.0;
     var sine = Math.sin(radians);
     var f = Math.cos(radians) / sine;
@@ -50,11 +50,11 @@ ayce.Matrix4.makePerspective = function (fieldOfView, aspect, near, far) {
  * @param {Number} bottom
  * @param {Number} near
  * @param {Number} far
- * @return {ayce.Matrix4} m
+ * @return {Ayce.Matrix4} m
  */
-ayce.Matrix4.makeOrthoPerspective = function (left, right, top, bottom, near, far) {
+Ayce.Matrix4.makeOrthoPerspective = function (left, right, top, bottom, near, far) {
 
-    var m = new ayce.Matrix4();
+    var m = new Ayce.Matrix4();
 
     var lr = 1 / (left - right);
     var bt = 1 / (bottom - top);
@@ -75,9 +75,9 @@ ayce.Matrix4.makeOrthoPerspective = function (left, right, top, bottom, near, fa
  * @param {Number} VRfov
  * @param {Number} zNear
  * @param {Number} zFar
- * @return {ayce.Matrix4} m
+ * @return {Ayce.Matrix4} m
  */
-ayce.Matrix4.makeVRPerspective = function (VRfov, zNear, zFar) {
+Ayce.Matrix4.makeVRPerspective = function (VRfov, zNear, zFar) {
     var DEG2RAD = Math.PI / 180.0;
 
     var upTan = Math.tan(VRfov.upDegrees * DEG2RAD);
@@ -93,7 +93,7 @@ ayce.Matrix4.makeVRPerspective = function (VRfov, zNear, zFar) {
     var rightHanded = true;
     var handednessScale = rightHanded ? -1.0 : 1.0;
 
-    var m = new ayce.Matrix4();
+    var m = new Ayce.Matrix4();
     m.data = new Float32Array([
         pxscale, 0, 0, 0,
         0, pyscale, 0, 0,
@@ -104,9 +104,9 @@ ayce.Matrix4.makeVRPerspective = function (VRfov, zNear, zFar) {
     return m;
 };
 
-ayce.Matrix4.prototype = {
-    poolMatrix: new ayce.Matrix4(),
-    poolVector3: new ayce.Vector3(),
+Ayce.Matrix4.prototype = {
+    poolMatrix: new Ayce.Matrix4(),
+    poolVector3: new Ayce.Vector3(),
     /**
      * Description
      */
@@ -130,7 +130,7 @@ ayce.Matrix4.prototype = {
     },
     /**
      * Applies transformation matrix
-     * @param {ayce.Matrix4} lhs
+     * @param {Ayce.Matrix4} lhs
      */
     apply: function (lhs) {
         var m111 = this.data[0],
@@ -189,8 +189,8 @@ ayce.Matrix4.prototype = {
     /**
      * Applies rotation to matrix
      * @param {Number} degrees
-     * @param {ayce.Vector3} axis
-     * @param {ayce.Vector3} pivotPoint
+     * @param {Ayce.Vector3} axis
+     * @param {Ayce.Vector3} pivotPoint
      */
     applyRotation: function (degrees, axis, pivotPoint) {
         this.poolMatrix.data[0] = 1;
@@ -259,12 +259,12 @@ ayce.Matrix4.prototype = {
      * @param {Number} z
      * @param {Number} degrees
      * @param {Boolean} toMatrix
-     * @return {ayce.Matrix4} m
+     * @return {Ayce.Matrix4} m
      */
     getAxisRotation: function (x, y, z, degrees, toMatrix) {
         var m;
         if(!toMatrix){
-            m = new ayce.Matrix4();
+            m = new Ayce.Matrix4();
         }
         else{
             m = toMatrix;
@@ -389,8 +389,8 @@ ayce.Matrix4.prototype = {
     },
     /**
      * Applies matrix to vector
-     * @param {ayce.Vector3} vector
-     * @return {ayce.Vector3} vector
+     * @param {Ayce.Vector3} vector
+     * @return {Ayce.Vector3} vector
      */
     transformVector: function (vector) {
         var x = vector.x;
@@ -405,8 +405,8 @@ ayce.Matrix4.prototype = {
     },
     /**
      * Copies values from one matrix to another
-     * @param {ayce.Matrix4} from
-     * @param {ayce.Matrix4} to
+     * @param {Ayce.Matrix4} from
+     * @param {Ayce.Matrix4} to
      */
     copyToMatrix: function(from, to){
         to.data[0] = from.data[0];
@@ -428,17 +428,17 @@ ayce.Matrix4.prototype = {
     },
     /**
      * Creates a copy of the matrix
-     * @return {ayce.Matrix4} m
+     * @return {Ayce.Matrix4} m
      */
     copy: function () {
-        var m = new ayce.Matrix4();
+        var m = new Ayce.Matrix4();
         m.data = new Float32Array(this.data);
         return m;
     },
     /**
-     * TODO: Converts ayce.Matrix4 to ayce.Matrix3
-     * @param {ayce.Matrix4} toMatrix
-     * @return {ayce.Matrix3} m3
+     * TODO: Converts Ayce.Matrix4 to Ayce.Matrix3
+     * @param {Ayce.Matrix4} toMatrix
+     * @return {Ayce.Matrix3} m3
      */
     getMatrix3: function (toMatrix) {
         var m3;
@@ -446,7 +446,7 @@ ayce.Matrix4.prototype = {
             m3 = toMatrix;
         }
         else{
-            m3 = new ayce.Matrix3();
+            m3 = new Ayce.Matrix3();
         }
         m3.data[0] = this.data[0];
         m3.data[1] = this.data[1];

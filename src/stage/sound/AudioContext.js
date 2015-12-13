@@ -1,7 +1,7 @@
 /**
  * Fetches an audio context from compatible browsers
  */
-ayce.AudioContext = function() {
+Ayce.AudioContext = function() {
     window.AudioContext = (window.AudioContext || window.webkitAudioContext || null);
 
     if (window.AudioContext) {

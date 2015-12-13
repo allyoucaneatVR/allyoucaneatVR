@@ -12,15 +12,15 @@
  * @class
  * @constructor
  */
-ayce.Skybox = function (front, back, top, bottom, right, left, prefix, camera, farPlane) {
+Ayce.Skybox = function (front, back, top, bottom, right, left, prefix, camera, farPlane) {
 
     this.isSkybox = true;
     this.imageSrc = [prefix+front, prefix+back, prefix+top, prefix+bottom, prefix+right, prefix+left];
     this.parent = camera;
-    this.parentRotationWeight = new ayce.Vector3(0.0,0.0,0.0);
-    this.parentPositionWeight = new ayce.Vector3(1.0,1.0,1.0);
+    this.parentRotationWeight = new Ayce.Vector3(0.0,0.0,0.0);
+    this.parentPositionWeight = new Ayce.Vector3(1.0,1.0,1.0);
     var scale = (farPlane*2)/Math.sqrt(3);
-    this.scale = new ayce.Vector3(
+    this.scale = new Ayce.Vector3(
         scale,
         scale,
         scale);
@@ -125,4 +125,4 @@ ayce.Skybox = function (front, back, top, bottom, right, left, prefix, camera, f
     this.calcBoundingBox();
 };
 
-ayce.Skybox.prototype = new ayce.Object3D();
+Ayce.Skybox.prototype = new Ayce.Object3D();

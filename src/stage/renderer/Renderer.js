@@ -8,7 +8,7 @@
  * @class
  * @constructor
  */
-ayce.Renderer = function (canvas) {
+Ayce.Renderer = function (canvas) {
 
     var gl;
     var i = 0;
@@ -95,8 +95,8 @@ ayce.Renderer = function (canvas) {
      *
      * Updates objects
      * @param {Camera} camera
-     * @param {ayce.Object3D[]} objects
-     * @param {ayce.Object3D[]} transparentObjects
+     * @param {Ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} transparentObjects
      */
     this.update = function(camera, objects, transparentObjects){
         for(i=0; i < objects.length; i++){
@@ -110,8 +110,8 @@ ayce.Renderer = function (canvas) {
     /**
      * Renders objects
      * @param {Camera} camera
-     * @param {ayce.Object3D[]} objects
-     * @param {ayce.Object3D[]} transparentObjects
+     * @param {Ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} transparentObjects
      */
     this.render = function (camera, objects, transparentObjects) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -148,14 +148,14 @@ ayce.Renderer = function (canvas) {
 
     /**
      * Returns buffer object for object
-     * @param {ayce.Object3D} object3D
-     * @param {ayce.LightContainer} lightContainer
-     * @return {ayce.BufferMulti} bufferMulti
+     * @param {Ayce.Object3D} object3D
+     * @param {Ayce.LightContainer} lightContainer
+     * @return {Ayce.BufferMulti} bufferMulti
      */
     this.getBuffer = function(object3D, lightContainer){
-        if(!object3D instanceof ayce.Object3D)throw "Can't get Buffer for " + object3D;
+        if(!object3D instanceof Ayce.Object3D)throw "Can't get Buffer for " + object3D;
 
-        return new ayce.BufferMulti(gl, object3D, lightContainer);
+        return new Ayce.BufferMulti(gl, object3D, lightContainer);
     };
 
     /**
@@ -183,6 +183,6 @@ ayce.Renderer = function (canvas) {
     };
 };
 
-ayce.Renderer.prototype = {
+Ayce.Renderer.prototype = {
 
 };

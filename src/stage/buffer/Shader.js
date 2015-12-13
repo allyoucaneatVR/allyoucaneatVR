@@ -6,7 +6,7 @@
  * @class
  * @constructor
  */
-ayce.Shader = function (gl, vertexString, fragmentString) {
+Ayce.Shader = function (gl, vertexString, fragmentString) {
 
     var vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertexString);
@@ -60,6 +60,6 @@ ayce.Shader = function (gl, vertexString, fragmentString) {
     };
 };
 
-ayce.Shader.prototype = {
+Ayce.Shader.prototype = {
 
 };

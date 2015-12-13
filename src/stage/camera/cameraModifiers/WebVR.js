@@ -7,25 +7,24 @@
  * @class
  * @constructor
  */
-ayce.WebVR = function () {
-
+Ayce.WebVR = function () {
     var scope = this;
-    var position = new ayce.Vector3();
-    var orientation = new ayce.Quaternion();
+    var position = new Ayce.Vector3();
+    var orientation = new Ayce.Quaternion();
+    var o = new Ayce.Quaternion();
+    var p = new Ayce.Vector3();
 
     /**
      * Description
      * @return CallExpression
      */
     this.getHMDData = function(){
-        return ayce.HMDHandler.getHMDData();
+        return Ayce.HMDHandler.getHMDData();
     };
     
-    var o = new ayce.Quaternion();
-    var p = new ayce.Vector3();
     this.update = function(playerRotation){
-        if (ayce.KeyboardHandler.isKeyDown("R"))ayce.HMDHandler.resetSensor();
-        var data = ayce.HMDHandler.getPositionalData();
+        if (Ayce.KeyboardHandler.isKeyDown("R"))Ayce.HMDHandler.resetSensor();
+        var data = Ayce.HMDHandler.getPositionalData();
         
         if(data){
             if(data.position){
@@ -61,4 +60,4 @@ ayce.WebVR = function () {
     };
 };
 
-ayce.WebVR.prototype = new ayce.CameraModifier();
+Ayce.WebVR.prototype = new Ayce.CameraModifier();

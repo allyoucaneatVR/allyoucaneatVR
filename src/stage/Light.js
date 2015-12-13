@@ -7,8 +7,8 @@
  * @class
  * @constructor
  */
-ayce.Light = function () {
-    this.position = new ayce.Vector3();
+Ayce.Light = function () {
+    this.position = new Ayce.Vector3();
     this.color = {
         red: 1.0,
         green: 1.0,
@@ -26,7 +26,7 @@ ayce.Light = function () {
  * @class
  * @constructor
  */
-ayce.LightContainer = function(){
+Ayce.LightContainer = function(){
 
     var lights = [];
 
@@ -41,11 +41,11 @@ ayce.LightContainer = function(){
         green: 0.5,
         blue: 0.5
     };
-    var poolPos = new ayce.Vector3();
+    var poolPos = new Ayce.Vector3();
 
     /**
      * Adds light to light container
-     * @param {ayce.Light} light
+     * @param {Ayce.Light} light
      */
     this.addLight = function(light){
         lights.push(light);
@@ -54,7 +54,7 @@ ayce.LightContainer = function(){
 
     /**
      * Removes light from light container
-     * @param {ayce.Light} light
+     * @param {Ayce.Light} light
      */
     this.removeLight = function(light){
         var index = lights.indexOf(light);
@@ -66,7 +66,7 @@ ayce.LightContainer = function(){
 
     /**
      * Updates light locations
-     * @param {ayce.Camera} camera
+     * @param {Ayce.Camera} camera
      */
     this.update = function(camera){
         var i = 0;
@@ -76,7 +76,7 @@ ayce.LightContainer = function(){
             viewMatrix = camera.getViewMatrix("left");
 
             for(i=0; i<lights.length; i++){
-                ayce.Vector3.prototype.copyToVector(lights[i].position, poolPos);
+                Ayce.Vector3.prototype.copyToVector(lights[i].position, poolPos);
                 p = viewMatrix.transformVector(poolPos);
 
                 this.locationsArrayLeftEye[i*3 + 0] = p.x;
@@ -87,7 +87,7 @@ ayce.LightContainer = function(){
             viewMatrix = camera.getViewMatrix("right");
 
             for(i=0; i<lights.length; i++){
-                ayce.Vector3.prototype.copyToVector(lights[i].position, poolPos);
+                Ayce.Vector3.prototype.copyToVector(lights[i].position, poolPos);
                 p = viewMatrix.transformVector(poolPos);
 
                 this.locationsArrayRightEye[i*3 + 0] = p.x;
@@ -98,7 +98,7 @@ ayce.LightContainer = function(){
             viewMatrix = camera.getViewMatrix();
 
             for(i=0; i<lights.length; i++){
-                ayce.Vector3.prototype.copyToVector(lights[i].position, poolPos);
+                Ayce.Vector3.prototype.copyToVector(lights[i].position, poolPos);
                 p = viewMatrix.transformVector(poolPos);
 
                 this.locationsArray[i*3 + 0] = p.x;
@@ -121,4 +121,4 @@ ayce.LightContainer = function(){
 
 };
 
-ayce.LightContainer.prototype = {};
+Ayce.LightContainer.prototype = {};

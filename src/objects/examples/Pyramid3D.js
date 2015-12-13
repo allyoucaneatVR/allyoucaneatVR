@@ -1,9 +1,9 @@
 /**
  * jslint browser: true
  */
-ayce.Pyramid3D = function () {
+Ayce.Pyramid3D = function () {
 
-    ayce.Object3D.call(this);
+    Ayce.Object3D.call(this);
 
     this.vertices = [
         // Tip
@@ -43,4 +43,4 @@ ayce.Pyramid3D = function () {
     this.transparent = true;
 };
 
-ayce.Pyramid3D.prototype = ayce.Object3D.prototype;
+Ayce.Pyramid3D.prototype = Ayce.Object3D.prototype;

@@ -1,21 +1,21 @@
 /**
  * Creates buffer and sets up shaders for an object3D
  * @param {Object} gl
- * @param {ayce.Object3D} object3D
- * @param {ayce.LightContainer} lightContainer
+ * @param {Ayce.Object3D} object3D
+ * @param {Ayce.LightContainer} lightContainer
  * @class
  * @constructor
  */
-ayce.BufferMulti = function (gl, object3D, lightContainer) {
-    if (!object3D instanceof ayce.Object3D) throw "Can't create buffers for " + object3D;
+Ayce.BufferMulti = function (gl, object3D, lightContainer) {
+    if (!object3D instanceof Ayce.Object3D) throw "Can't create buffers for " + object3D;
 
-    var modelViewMatrix = new ayce.Matrix4();
+    var modelViewMatrix = new Ayce.Matrix4();
     modelViewMatrix.transposeUniform = false;
     //VR 
-    var leftMatrix = new ayce.Matrix4();
-    var rightMatrix = new ayce.Matrix4();
-    var leftNormalMatrix = new ayce.Matrix3();
-    var rightNormalMatrix = new ayce.Matrix3();
+    var leftMatrix = new Ayce.Matrix4();
+    var rightMatrix = new Ayce.Matrix4();
+    var leftNormalMatrix = new Ayce.Matrix3();
+    var rightNormalMatrix = new Ayce.Matrix3();
     var leftPerspektive = null;
     var rightPerspektive = null;
 
@@ -57,7 +57,7 @@ ayce.BufferMulti = function (gl, object3D, lightContainer) {
         useTexture: Boolean(object3D.textureCoords && object3D.imageSrc),
         useLighting: useLighting,
         useMultiTex: Boolean(object3D.textureIndices),
-        normalMatrix: new ayce.Matrix3(),
+        normalMatrix: new Ayce.Matrix3(),
         useSpecularMap: Boolean(object3D.specularMap),
         useNormalMap: Boolean(object3D.normalMap)
     };
@@ -93,13 +93,13 @@ ayce.BufferMulti = function (gl, object3D, lightContainer) {
 
     if(object3D.shader){
 //        console.log("Loading Shader File: " + object3D.shader);
-        shaderVert = ayce.XMLLoader.getSourceSynch(object3D.shader + ".vert");
-        shaderFrag = ayce.XMLLoader.getSourceSynch(object3D.shader + ".frag");
+        shaderVert = Ayce.XMLLoader.getSourceSynch(object3D.shader + ".vert");
+        shaderFrag = Ayce.XMLLoader.getSourceSynch(object3D.shader + ".frag");
         shaderID = "A"+object3D.shader;
         if(object3D.logVertexShader) console.log(shaderVert);
         if(object3D.logFragmentShader) console.log(shaderFrag);
     }else{
-        var shaderGenerator = new ayce.ShaderGenerator();
+        var shaderGenerator = new Ayce.ShaderGenerator();
         
         if(useLighting){
             shaderGenerator.useVertexLighting = Boolean(object3D.normals && !object3D.useFragmentLighting);
@@ -135,13 +135,13 @@ ayce.BufferMulti = function (gl, object3D, lightContainer) {
         shader = gl.shaders[shaderID];
     }
     else{
-        shader = new ayce.Shader(gl, shaderVert, shaderFrag);
+        shader = new Ayce.Shader(gl, shaderVert, shaderFrag);
         gl.shaders[shaderID] = shader;
     }
 
     //Create Buffer
     var drawMode = useWireframe ? gl.LINES : undefined;
-    var buffer = new ayce.Buffer(gl, object3D, shader, attributes, uniforms, drawMode);
+    var buffer = new Ayce.Buffer(gl, object3D, shader, attributes, uniforms, drawMode);
     if(object3D.twoFaceTransparency) {
         var indices = object3D.indices;
         indices = indices.slice().reverse().concat(indices);
@@ -165,17 +165,17 @@ ayce.BufferMulti = function (gl, object3D, lightContainer) {
      *
      *********************************************/
 
-    var copyMatrix = new ayce.Matrix4();
+    var copyMatrix = new Ayce.Matrix4();
     /**
      * Updates perspective Matrix
-     * @param {ayce.Camera} camera
+     * @param {Ayce.Camera} camera
      */
     this.update = function (camera) {
         //Create ModelViewMatrix
-        ayce.Matrix4.prototype.copyToMatrix(object3D.modelMatrix, modelViewMatrix);
+        Ayce.Matrix4.prototype.copyToMatrix(object3D.modelMatrix, modelViewMatrix);
         modelViewMatrix.apply(camera.getViewMatrix());
         
-        ayce.Matrix4.prototype.copyToMatrix(modelViewMatrix, copyMatrix);
+        Ayce.Matrix4.prototype.copyToMatrix(modelViewMatrix, copyMatrix);
         copyMatrix.invert();
         copyMatrix.transpose();
         copyMatrix.getMatrix3(uniformValues.normalMatrix);
@@ -196,23 +196,23 @@ ayce.BufferMulti = function (gl, object3D, lightContainer) {
 
     /**
      * Updates VR perspective Matrices
-     * @param {ayce.Camera} camera
+     * @param {Ayce.Camera} camera
      */
     this.updateVR = function(camera){
         //Create ModelViewMatrix Left eye
-        ayce.Matrix4.prototype.copyToMatrix(object3D.modelMatrix, leftMatrix);
+        Ayce.Matrix4.prototype.copyToMatrix(object3D.modelMatrix, leftMatrix);
         leftMatrix.apply(camera.getViewMatrix("left"));
 
-        ayce.Matrix4.prototype.copyToMatrix(leftMatrix, copyMatrix);
+        Ayce.Matrix4.prototype.copyToMatrix(leftMatrix, copyMatrix);
         copyMatrix.invert();
         copyMatrix.transpose();
         copyMatrix.getMatrix3(leftNormalMatrix);
 
         //Create ModelViewMatrix Right eye
-        ayce.Matrix4.prototype.copyToMatrix(object3D.modelMatrix, rightMatrix);
+        Ayce.Matrix4.prototype.copyToMatrix(object3D.modelMatrix, rightMatrix);
         rightMatrix.apply(camera.getViewMatrix("right"));
 
-        ayce.Matrix4.prototype.copyToMatrix(rightMatrix, copyMatrix);
+        Ayce.Matrix4.prototype.copyToMatrix(rightMatrix, copyMatrix);
         copyMatrix.invert();
         copyMatrix.transpose();
         copyMatrix.getMatrix3(rightNormalMatrix);
@@ -251,6 +251,6 @@ ayce.BufferMulti = function (gl, object3D, lightContainer) {
     };
 };
 
-ayce.BufferMulti.prototype = {
+Ayce.BufferMulti.prototype = {
     
 };

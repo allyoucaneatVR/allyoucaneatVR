@@ -3,23 +3,21 @@
  * @class
  * @constructor
  */
-ayce.HMDHandler = function(){};
+Ayce.HMDHandler = function(){};
 
 var vrDevice = null;
-var eyeParamsL = null;
-var eyeParamsR = null;
 var positionDevice = null;
-var foundHMD = false;
-
 
 /**
  * Description
  * @return ArrayExpression
  */
-ayce.HMDHandler.getHMDData = function(){
-    if(!eyeParamsL || !eyeParamsR){
-        return null;
-    }
+Ayce.HMDHandler.getHMDData = function(){
+    if(!vrDevice)return null;
+    
+    var eyeParamsL = vrDevice.getEyeParameters( 'left' );
+    var eyeParamsR = vrDevice.getEyeParameters( 'right' );
+    
     return [eyeParamsL, eyeParamsR];
 };
 
@@ -27,27 +25,15 @@ ayce.HMDHandler.getHMDData = function(){
  * Description
  * @return CallExpression
  */
-ayce.HMDHandler.getPositionalData = function(){
-    if(positionDevice === null){return;}
-
+Ayce.HMDHandler.getPositionalData = function(){
+    if(positionDevice === null)return;
     return positionDevice.getState();
 };
 
 /**
  * Description
  */
-ayce.HMDHandler.isPositionDevice = function(){
-    if(vrDevice === null && positionDevice !== null){
-        return true;
-    }else if(vrDevice !== null && positionDevice === null){
-        return false;
-    }
-};
-
-/**
- * Description
- */
-ayce.HMDHandler.resetSensor = function () {
+Ayce.HMDHandler.resetSensor = function () {
     if ( positionDevice === undefined ) return;
 
     if ( 'resetSensor' in positionDevice) {
@@ -60,32 +46,35 @@ ayce.HMDHandler.resetSensor = function () {
 
 };
 
-var onVRDevices = function(devices){
-    for(var i in devices){
-        if(devices[i] instanceof HMDVRDevice && vrDevice === null){
-            vrDevice = devices[i];
-            eyeParamsL = vrDevice.getEyeParameters( 'left' );
-            eyeParamsR = vrDevice.getEyeParameters( 'right' );
-            foundHMD = true;
+(function(){
+    if (!navigator.getVRDevices)return;
+    navigator.getVRDevices().then( onVRDevices );
+    
+    function onVRDevices(devices){
+        //HMD
+        for(var i in devices){
+            if(devices[i] instanceof HMDVRDevice){
+                vrDevice = devices[i];
+                break;
+            }
         }
-        else if(devices[i] instanceof PositionSensorVRDevice && positionDevice === null){
-            positionDevice = devices[i];
+        
+        //Position
+        for(var i in devices){
+            if(devices[i] instanceof PositionSensorVRDevice){
+                positionDevice = devices[i];
+                break;
+            }
         }
     }
-};
-
-if (navigator.getVRDevices !== undefined ) {
-    navigator.getVRDevices().then( onVRDevices );
-}
+})();
 
 /**
  * Description
  * @return BinaryExpression
  */
-ayce.HMDHandler.isWebVRReady = function(){
+Ayce.HMDHandler.isWebVRReady = function(){
     return (navigator.getVRDevices !== undefined);
 };
 
-ayce.HMDHandler.prototype = {
-
-};
+Ayce.HMDHandler.prototype = {};

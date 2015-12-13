@@ -4,21 +4,21 @@
 
 /**
  * Creates new camera object
- * @param {ayce.CameraManager} cameraManager
+ * @param {Ayce.CameraManager} cameraManager
  * @constructor
  */
-ayce.Camera = function (cameraManager) {
+Ayce.Camera = function (cameraManager) {
     var scope = this;
     this.useVR = false;
     var isFullscreen = false;
 
-    var position = new ayce.Vector3();     //local position
-    var rotation = new ayce.Quaternion();
+    var position = new Ayce.Vector3();     //local position
+    var rotation = new Ayce.Quaternion();
 
-    var viewMatrixPool = new ayce.Matrix4();
-    var viewMatrix = new ayce.Matrix4();
-    var viewMatrixLeft = new ayce.Matrix4();
-    var viewMatrixRight = new ayce.Matrix4();
+    var viewMatrixPool = new Ayce.Matrix4();
+    var viewMatrix = new Ayce.Matrix4();
+    var viewMatrixLeft = new Ayce.Matrix4();
+    var viewMatrixRight = new Ayce.Matrix4();
 
     var perspectiveMatrix = null;
     var perspectiveMatrixLeft = null;
@@ -33,7 +33,7 @@ ayce.Camera = function (cameraManager) {
 
     this.isOrtho = false;
 
-    var forwardVector = new ayce.Vector3();
+    var forwardVector = new Ayce.Vector3();
 
     /**
      * Updates camera
@@ -55,13 +55,13 @@ ayce.Camera = function (cameraManager) {
     this.updateProjectionMatrix = function (){
         var aspectRatio = this.width/this.height;
         if(cameraManager && cameraManager.isInputVR() && cameraManager.cameraProperties.eyeFOVL){
-            perspectiveMatrixLeft = ayce.Matrix4.makeVRPerspective(cameraManager.cameraProperties.eyeFOVL, this.nearPlane, this.farPlane);
-            perspectiveMatrixRight = ayce.Matrix4.makeVRPerspective(cameraManager.cameraProperties.eyeFOVR, this.nearPlane, this.farPlane);
+            perspectiveMatrixLeft = Ayce.Matrix4.makeVRPerspective(cameraManager.cameraProperties.eyeFOVL, this.nearPlane, this.farPlane);
+            perspectiveMatrixRight = Ayce.Matrix4.makeVRPerspective(cameraManager.cameraProperties.eyeFOVR, this.nearPlane, this.farPlane);
         }else{
             if(!this.isOrtho) {
-                perspectiveMatrix = ayce.Matrix4.makePerspective(this.fieldOfView, aspectRatio, this.nearPlane, this.farPlane);
+                perspectiveMatrix = Ayce.Matrix4.makePerspective(this.fieldOfView, aspectRatio, this.nearPlane, this.farPlane);
             }else{
-                perspectiveMatrix = ayce.Matrix4.makeOrthoPerspective(-1.0, 1.0, 1.0, -1.0, 0.5, 1.5);
+                perspectiveMatrix = Ayce.Matrix4.makeOrthoPerspective(-1.0, 1.0, 1.0, -1.0, 0.5, 1.5);
             }
         }
     };
@@ -136,7 +136,7 @@ ayce.Camera = function (cameraManager) {
 
     /**
      * Returns camera controller
-     * @return {ayce.CameraManager} cameraController
+     * @return {Ayce.CameraManager} cameraController
      */
     this.getManager = function(){
         return cameraManager;
@@ -144,7 +144,7 @@ ayce.Camera = function (cameraManager) {
 
     /**
      * Returns view matrix for respective eye
-     * @return {ayce.Matrix4} viewMatrix
+     * @return {Ayce.Matrix4} viewMatrix
      */
     this.getViewMatrix = function(eye){
         if(eye === "left"){
@@ -161,7 +161,7 @@ ayce.Camera = function (cameraManager) {
     /**
      * Returns perspective matrix for respective eye
      * @param {String} eye
-     * @return {ayce.Matrix4} perspectiveMatrix
+     * @return {Ayce.Matrix4} perspectiveMatrix
      */
     this.getPerspectiveMatrix = function(eye){
         if(eye === "left" && perspectiveMatrixLeft !== null){
@@ -194,7 +194,7 @@ ayce.Camera = function (cameraManager) {
 
     /**
      * Returns camera forvard vector
-     * @return {ayce.Vector3} forwardVector
+     * @return {Ayce.Vector3} forwardVector
      */
     this.getForwardVector = function(){
         if(scope.useVR){
@@ -215,6 +215,6 @@ ayce.Camera = function (cameraManager) {
     };
 };
 
-ayce.Camera.prototype = {
+Ayce.Camera.prototype = {
 
 };

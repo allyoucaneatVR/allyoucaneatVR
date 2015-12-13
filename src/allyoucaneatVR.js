@@ -1,11 +1,11 @@
-var ayce = {};
+var Ayce = {};
 
 //for node.js
-if(typeof module !== 'undefined')module.exports = ayce;
+if(typeof module !== 'undefined')module.exports = Ayce;
 if(typeof navigator === 'undefined')navigator = {};
 
 
-ayce.requestAnimFrame = function(func){
+Ayce.requestAnimFrame = function(func){
     var req = window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||

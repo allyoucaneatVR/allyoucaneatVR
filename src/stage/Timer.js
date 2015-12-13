@@ -7,11 +7,11 @@
  * @class
  * @constructor
  */
-ayce.Timer = function () {
+Ayce.Timer = function () {
 
 };
 
-ayce.Timer.prototype = {
+Ayce.Timer.prototype = {
 
 };
 
@@ -19,6 +19,6 @@ ayce.Timer.prototype = {
  * Returns current time
  * @return {Number} time
  */
-ayce.Timer.prototype.getCurrentTimeMs = function(){
+Ayce.Timer.prototype.getCurrentTimeMs = function(){
     return new Date().getTime();
 };

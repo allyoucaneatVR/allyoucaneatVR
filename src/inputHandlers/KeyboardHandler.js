@@ -8,12 +8,12 @@
  * @param {Canvas} canvas
  * @constructor
  */
-ayce.KeyboardHandler = function (canvas) {
+Ayce.KeyboardHandler = function (canvas) {
 
     var keyDownState = [];
     var keyUpState = [];
 
-    ayce.KeyboardHandler.keys = [];
+    Ayce.KeyboardHandler.keys = [];
 
     /**
      * Description
@@ -22,19 +22,19 @@ ayce.KeyboardHandler = function (canvas) {
         var key;
         //Key down
         for (key = 0; key < keyDownState.length; key++) {
-            ayce.KeyboardHandler.keys[keyDownState[key]] = true;
+            Ayce.KeyboardHandler.keys[keyDownState[key]] = true;
             keyDownState.splice(key, 1);
         }
         //Key up
         for (key = 0; key < keyUpState.length; key++) {
-            ayce.KeyboardHandler.keys[keyUpState[key]] = false;
+            Ayce.KeyboardHandler.keys[keyUpState[key]] = false;
             keyUpState.splice(key, 1);
         }
     };
 
     window.addEventListener('keydown', function (e) {
         var key = e.keyCode || e.which;
-        if (!ayce.KeyboardHandler.keys[key]) {
+        if (!Ayce.KeyboardHandler.keys[key]) {
             keyDownState.push(key);
         }
     }, true);
@@ -50,15 +50,15 @@ ayce.KeyboardHandler = function (canvas) {
  * @param {String} key
  * @return {Boolean} isDown
  */
-ayce.KeyboardHandler.isKeyDown = function (key) {
-    if (!ayce.KeyboardHandler.keys) {
+Ayce.KeyboardHandler.isKeyDown = function (key) {
+    if (!Ayce.KeyboardHandler.keys) {
         console.log("KeyboardHandler not initialised");
         return;
     }
     
     if(key.length === 1){
         var keyCode = key.charCodeAt(0);
-        return ayce.KeyboardHandler.keys[keyCode];
+        return Ayce.KeyboardHandler.keys[keyCode];
     }
     else if(key.length > 1){
         //TODO "SPACE" "ENTER" "LEFT_ARROW"
@@ -68,6 +68,6 @@ ayce.KeyboardHandler.isKeyDown = function (key) {
     return false;
 };
 
-ayce.KeyboardHandler.prototype = {
+Ayce.KeyboardHandler.prototype = {
 
 };

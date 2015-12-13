@@ -6,13 +6,13 @@
  * Creates renderer for VR
  * @param {Canvas} canvas
  * @param {Boolean} distorted
- * @param {ayce.CameraManager} cameraController
+ * @param {Ayce.CameraManager} cameraController
  * @class
  * @constructor
  */
-ayce.VRRenderer = function (canvas, distorted, cameraController) {
+Ayce.VRRenderer = function (canvas, distorted, cameraController) {
 
-    ayce.Renderer.call(this, canvas);
+    Ayce.Renderer.call(this, canvas);
 
     var scope = this;
 
@@ -75,7 +75,7 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
      */
     this.init = function(){
         console.log("Initializing VRRenderer");
-        init(); //ayce.Renderer.init();
+        init(); //Ayce.Renderer.init();
 
         gl = this.getGL();
         var temp = initTextureFramebuffer();
@@ -85,23 +85,23 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
         framebufferR = temp[0];
         textureR = temp[1];
 
-        vrSquare = new ayce.VRSquare();
-        var vert = ayce.VRRenderer.prototype.vrCanvasVert;//ayce.XMLLoader.getSourceSynch(shaderPath + vrSquare.shader + ".vert");
-        var frag = ayce.VRRenderer.prototype.vrCanvasFrag;//ayce.XMLLoader.getSourceSynch(shaderPath + vrSquare.shader + ".frag");
-        shader = new ayce.Shader(gl, vert, frag);
+        vrSquare = new Ayce.VRSquare();
+        var vert = Ayce.VRRenderer.prototype.vrCanvasVert;//Ayce.XMLLoader.getSourceSynch(shaderPath + vrSquare.shader + ".vert");
+        var frag = Ayce.VRRenderer.prototype.vrCanvasFrag;//Ayce.XMLLoader.getSourceSynch(shaderPath + vrSquare.shader + ".frag");
+        shader = new Ayce.Shader(gl, vert, frag);
         shader.pMatrixUniform = shader.getUniformLocation("uPMatrix");
         shader.mvMatrixUniform = shader.getUniformLocation("uMVMatrix");
         shader.vertexPositionAttribute = shader.getAttribLocation("aVertexPosition");
         shader.textureCoordAttribute = shader.getAttribLocation("aTextureCoord");
         shader.samplerUniform = shader.getUniformLocation("uSampler");
 
-        var config = new ayce.CameraModifier();
+        var config = new Ayce.CameraModifier();
         config.getPosition().set(0, 0, 2.3);
         config.getOrientation().set(0, 0, 0, 1);
         
-        var controller = new ayce.CameraManager();
+        var controller = new Ayce.CameraManager();
         controller.modifiers.push(config);
-        cameraDistortion = new ayce.Camera(controller);
+        cameraDistortion = new Ayce.Camera(controller);
         cameraDistortion.isOrtho = true;
         cameraDistortion.updateProjectionMatrix();
         cameraDistortion.update();
@@ -174,8 +174,8 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
     /**
      * Updates objects
      * @param {Camera} camera
-     * @param {ayce.Object3D[]} objects
-     * @param {ayce.Object3D[]} transparentObjects
+     * @param {Ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} transparentObjects
      */
     this.update = function (camera, objects, transparentObjects) {
         for(i=0; i < objects.length; i++){
@@ -190,12 +190,10 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
     /**
      * Renders objects
      * @param {Camera} camera
-     * @param {ayce.Object3D[]} objects
-     * @param {ayce.Object3D[]} transparentObjects
+     * @param {Ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} transparentObjects
      */
     this.render = function (camera, objects, transparentObjects) {
-        if(!camera.getEyeTranslation("left"))return;//TODO check if camera ready
-
         if(distorted){
             vrRenderDistorted(objects, transparentObjects);
         }
@@ -206,8 +204,8 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
 
     /**
      * Renders scene to frame buffer with shader for barrel distortion correction and collor abberation
-     * @param {ayce.Object3D[]} objects
-     * @param {ayce.Object3D[]} transparentObjects
+     * @param {Ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} transparentObjects
      */
     function vrRenderDistorted(objects, transparentObjects) {
         //Render Left Eye
@@ -262,8 +260,8 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
 
     /**
      * Renders scene to frame buffers
-     * @param {ayce.Object3D[]} objects
-     * @param {ayce.Object3D[]} transparentObjects
+     * @param {Ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} transparentObjects
      */
     function vrRender(objects, transparentObjects) {
         //Render Left Eye
@@ -281,7 +279,7 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
 
     /**
      * Renders Objects
-     * @param {ayce.Object3D[]} objects
+     * @param {Ayce.Object3D[]} objects
      * @param {String} eye
      */
     function renderObjects (objects, eye) {
@@ -291,8 +289,8 @@ ayce.VRRenderer = function (canvas, distorted, cameraController) {
     }
 };
 
-ayce.VRRenderer.prototype = new ayce.Renderer();
-ayce.VRRenderer.prototype.vrCanvasVert = 
+Ayce.VRRenderer.prototype = new Ayce.Renderer();
+Ayce.VRRenderer.prototype.vrCanvasVert = 
     "attribute vec3 aVertexPosition;"+
     "attribute vec2 aTextureCoord;"+
 
@@ -306,7 +304,7 @@ ayce.VRRenderer.prototype.vrCanvasVert =
       "gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);"+
       "vTextureCoord = aTextureCoord;"+
     "}";
-ayce.VRRenderer.prototype.vrCanvasFrag =
+Ayce.VRRenderer.prototype.vrCanvasFrag =
 "precision mediump float;"+
 
 "uniform sampler2D uSampler;"+

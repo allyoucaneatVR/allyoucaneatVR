@@ -1,9 +1,9 @@
 /**
  * jslint browser: true
  */
-ayce.Sphere3D = function () {
+Ayce.Sphere3D = function () {
 
-    ayce.Object3D.call(this);
+    Ayce.Object3D.call(this);
 
     this.imageSrc = "earth.jpg";
 
@@ -66,4 +66,4 @@ ayce.Sphere3D = function () {
 
 };
 
-ayce.Sphere3D.prototype = ayce.Object3D.prototype;
+Ayce.Sphere3D.prototype = Ayce.Object3D.prototype;

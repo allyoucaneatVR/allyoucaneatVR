@@ -11,19 +11,19 @@
  * @class
  * @constructor
  */
-ayce.Quaternion = function (x, y, z, w) {
+Ayce.Quaternion = function (x, y, z, w) {
     this.x = x || 0;
     this.y = y || 0;
     this.z = z || 0;
     this.w = w || 1;
 };
 
-ayce.Quaternion.prototype = {
+Ayce.Quaternion.prototype = {
 
     /**
      * Multiplies two quaternions
-     * @param {ayce.Quaternion} qa
-     * @param {ayce.Quaternion} qb
+     * @param {Ayce.Quaternion} qa
+     * @param {Ayce.Quaternion} qb
      */
     multiply: function(qa, qb){
         var w1 = qa.w;
@@ -57,7 +57,7 @@ ayce.Quaternion.prototype = {
 
     /**
      * Sets quaternion to rotation around axis
-     * @param {ayce.Vector3} axis
+     * @param {Ayce.Vector3} axis
      * @param {Number} angle
      */
     fromAxisAngle: function (axis, angle) {
@@ -97,7 +97,7 @@ ayce.Quaternion.prototype = {
 
     /**
      * Normalizes Quaternion
-     * @return {ayce.Quaternion} quaternion
+     * @return {Ayce.Quaternion} quaternion
      */
     normalize: function () {
         var x = this.x;
@@ -126,7 +126,7 @@ ayce.Quaternion.prototype = {
 
     /**
      * TODO: Description
-     * @param {ayce.Vector3} vector
+     * @param {Ayce.Vector3} vector
      * @return vector
      */
     rotatePoint: function(vector) {
@@ -152,9 +152,9 @@ ayce.Quaternion.prototype = {
 
     /**
      * TODO: Description
-     * @param {ayce.Vector3} vector
-     * @param {ayce.Vector3} target
-     * @return {ayce.Vector3} v
+     * @param {Ayce.Vector3} vector
+     * @param {Ayce.Vector3} target
+     * @return {Ayce.Vector3} v
      */
     getRotatedPoint: function(vector, target) {
         var x = this.x;
@@ -176,7 +176,7 @@ ayce.Quaternion.prototype = {
         y1 = w * y2 - x * z2 + z * x2;
         z1 = w * z2 + x * y2 - y * x2;
         
-        var v = target ? target : new ayce.Vector3();
+        var v = target ? target : new Ayce.Vector3();
         v.x = -w1 * x + x1 * w - y1 * z + z1 * y;
         v.y = -w1 * y + x1 * z + y1 * w - z1 * x;
         v.z = -w1 * z - x1 * y + y1 * x + z1 * w;
@@ -185,7 +185,7 @@ ayce.Quaternion.prototype = {
 
     /**
      * TODO: Description
-     * @param {ayce.Matrix4} matrix
+     * @param {Ayce.Matrix4} matrix
      */
     toRotationMatrix: function (matrix) {
         var x = this.x;
@@ -218,7 +218,7 @@ ayce.Quaternion.prototype = {
 
     /**
      * Returns conjugated quaternion
-     * @return {ayce.Quaternion} quaternion
+     * @return {Ayce.Quaternion} quaternion
      */
     getConjugate: function(target){
         this.normalize();
@@ -230,16 +230,16 @@ ayce.Quaternion.prototype = {
             return target;
         }
         else{
-            return new ayce.Quaternion(-this.x, -this.y, -this.z, this.w);
+            return new Ayce.Quaternion(-this.x, -this.y, -this.z, this.w);
         }
     },
 
     /**
      * Returns copy of quaternion
-     * @return {ayce.Quaternion} quaternion
+     * @return {Ayce.Quaternion} quaternion
      */
     copy: function(){
-        return new ayce.Quaternion(this.x, this.y, this.z, this.w);
+        return new Ayce.Quaternion(this.x, this.y, this.z, this.w);
     },
 
     /**
@@ -303,10 +303,10 @@ ayce.Quaternion.prototype = {
 
     /**
      * Returns forward vector
-     * @returns {ayce.Vector3} vector
+     * @returns {Ayce.Vector3} vector
      */
     getForwardVector: function(){
-        return new ayce.Vector3(
+        return new Ayce.Vector3(
             2 * (this.x * this.z + this.w * this.y),
             2 * (this.y * this.x - this.w * this.x),
             1 - 2 * (this.x * this.x + this.y * this.y));
@@ -314,10 +314,10 @@ ayce.Quaternion.prototype = {
 
     /**
      * Returns up vector
-     * @returns {ayce.Vector3} vector
+     * @returns {Ayce.Vector3} vector
      */
     getUpVector: function(){
-        return new ayce.Vector3(
+        return new Ayce.Vector3(
             2 * (this.x * this.y - this.w * this.z),
             1 - 2 * (this.x * this.x + this.z * this.z),
             2 * (this.y * this.z + this.w * this.x));
@@ -325,10 +325,10 @@ ayce.Quaternion.prototype = {
 
     /**
      * Returns right vector
-     * @returns {ayce.Vector3} vector
+     * @returns {Ayce.Vector3} vector
      */
     getRightVector: function(){
-        return new ayce.Vector3(
+        return new Ayce.Vector3(
             1 - 2 * (this.y * this.y + this.z * this.z),
             2 * (this.x * this.y + this.w * this.z),
             2 * (this.x * this.z - this.w * this.y));

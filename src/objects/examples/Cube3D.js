@@ -1,9 +1,9 @@
 /**
  * jslint browser: true
  */
-ayce.Cube3D = function () {
+Ayce.Cube3D = function () {
 
-    ayce.Object3D.call(this);
+    Ayce.Object3D.call(this);
 
     this.vertices = [
         // Front face
@@ -85,4 +85,4 @@ ayce.Cube3D = function () {
     ];
 };
 
-ayce.Cube3D.prototype = new ayce.Object3D();//ayce.Object3D.prototype;
+Ayce.Cube3D.prototype = new Ayce.Object3D();//Ayce.Object3D.prototype;

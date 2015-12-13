@@ -7,7 +7,7 @@
  * @class
  * @constructor
  */
-ayce.SensorsHandler = function () {
+Ayce.SensorsHandler = function () {
 
     var scope = this;
 
@@ -30,9 +30,9 @@ var sensorsHandler = null;
  * Returns roll value (alpha) from accelerometer / gyroscope
  * @return Number
  */
-ayce.SensorsHandler.getRoll = function(){
+Ayce.SensorsHandler.getRoll = function(){
     if(sensorsHandler == null){
-        sensorsHandler = new ayce.SensorsHandler();
+        sensorsHandler = new Ayce.SensorsHandler();
     }
     return sensorsHandler.alpha;
 };
@@ -41,9 +41,9 @@ ayce.SensorsHandler.getRoll = function(){
  * Returns pitch value (beta) from accelerometer / gyroscope
  * @return Number
  */
-ayce.SensorsHandler.getPitch = function(){
+Ayce.SensorsHandler.getPitch = function(){
     if(sensorsHandler == null){
-        sensorsHandler = new ayce.SensorsHandler();
+        sensorsHandler = new Ayce.SensorsHandler();
     }
     return sensorsHandler.beta;
 };
@@ -52,13 +52,13 @@ ayce.SensorsHandler.getPitch = function(){
  * Returns yaw value (gamma) from accelerometer / gyroscope
  * @return Number
  */
-ayce.SensorsHandler.getYaw = function(){
+Ayce.SensorsHandler.getYaw = function(){
     if(sensorsHandler == null){
-        sensorsHandler = new ayce.SensorsHandler();
+        sensorsHandler = new Ayce.SensorsHandler();
     }
     return sensorsHandler.gamma;
 };
 
-ayce.SensorsHandler.prototype = {
+Ayce.SensorsHandler.prototype = {
 
 };

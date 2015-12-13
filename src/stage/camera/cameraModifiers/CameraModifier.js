@@ -3,10 +3,10 @@
  * @class
  * @constructor
  */
-ayce.CameraModifier = function(){
+Ayce.CameraModifier = function(){
 
-    this.position = new ayce.Vector3();
-    this.orientation = new ayce.Quaternion();
+    this.position = new Ayce.Vector3();
+    this.orientation = new Ayce.Quaternion();
     
     this.update = function(){
         
@@ -14,7 +14,7 @@ ayce.CameraModifier = function(){
     
     /**
      * Returns orientation from device configuration
-     * @return {ayce.Quaternion} orientation
+     * @return {Ayce.Quaternion} orientation
      */
     this.getOrientation = function(){
         return this.orientation;
@@ -22,7 +22,7 @@ ayce.CameraModifier = function(){
 
     /**
      * Returns position from device configuration
-     * @return {ayce.Vector3} position
+     * @return {Ayce.Vector3} position
      */
     this.getPosition = function(){
         return this.position;
