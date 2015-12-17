@@ -133,6 +133,40 @@ Ayce.Scene = function (canvas) {
         renderer = null;
     };
 
+    this.setFullscreenElement = function(domElement){
+        var scope = this;
+        var lock = null;
+        
+        domElement.addEventListener('click', function(){
+            var camera = scope.getCamera();
+            camera.setFullscreen(!camera.isFullscreen(), canvas);
+
+            //Mobile VR screenlock/wakeLock(TODO)
+            if(camera.isFullscreen()){
+                if ('orientation' in screen) {
+                    screen.orientation.lock('landscape-primary').catch(function(){});
+                }
+                if(window.navigator.requestWakeLock){
+                    lock = window.navigator.requestWakeLock('screen');
+                }
+                if(window.navigator.wakeLock){
+                    window.navigator.wakeLock.request('screen');
+                }
+                screen.keepAwake = true;
+            }
+            else{
+                if ('orientation' in screen) {
+                    screen.orientation.unlock().catch(function(){});
+                }
+                if(window.navigator.requestWakeLock && lock){
+                    lock.unlock();
+                }
+                screen.keepAwake = false;
+            }
+            
+        });
+    };
+    
     //setup scene
     this.setRendererDesktop();
     

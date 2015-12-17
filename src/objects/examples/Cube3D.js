@@ -1,6 +1,13 @@
 /**
  * jslint browser: true
  */
+ /**
+ * Creates a new cube Object3D
+ * @class
+ * @param
+ * @returns {Ayce.Object3D} object
+ * @constructor
+ */
 Ayce.Cube3D = function () {
 
     Ayce.Object3D.call(this);
