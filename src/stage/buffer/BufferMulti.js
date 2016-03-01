@@ -73,7 +73,7 @@ Ayce.BufferMulti = function (gl, object3D, lightContainer) {
     if(useLighting){
         uniforms.push(["uAmbientColor", "uniform3f", lightContainer.ambientLight, ["red", "green", "blue"]]);
 
-        uniforms.push(["uLightIndex", "uniform1f", lightContainer, ["lightsCount"]]);
+        //uniforms.push(["uLightIndex", "uniform1f", lightContainer, ["lightsCount"]]);
         uniforms.push(["uPointLightingLocations", "uniform3fv", lightContainer, ["locationsArray"]]);
         uniforms.push(["uPointLightingColors", "uniform3fv", lightContainer, ["colorsArray"]]);
         uniforms.push(["uSpecularColors", "uniform3fv", lightContainer, ["specColorsArray"]]);
@@ -99,6 +99,7 @@ Ayce.BufferMulti = function (gl, object3D, lightContainer) {
         if(object3D.logVertexShader) console.log(shaderVert);
         if(object3D.logFragmentShader) console.log(shaderFrag);
     }else{
+//        console.log("Generating Shader...");
         var shaderGenerator = new Ayce.ShaderGenerator();
         
         if(useLighting){
@@ -248,6 +249,14 @@ Ayce.BufferMulti = function (gl, object3D, lightContainer) {
     
     this.dispose = function(){
         buffer.dispose();
+    };
+    
+    this.updateTexture = function(glTexture, image){
+        Ayce.Buffer.prototype.loadTexture(gl, glTexture, image);
+    };
+    
+    this.getTextureData = function(){
+        return buffer.getTextureData();
     };
 };
 
