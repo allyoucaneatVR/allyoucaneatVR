@@ -51,11 +51,14 @@ Ayce.Scene = function (canvas) {
         if(m && m.length > 0)throw "Camera modifiers not empty. Please call camera.getManager().clearModifiers() first.";
         
         if(Ayce.HMDHandler.isWebVRReady()){
-            var cameraController = camera.getManager();
-            cameraController.modifiers.push(new Ayce.WebVR());
-            camera.update();
-            this.setRenderer(new Ayce.VRRenderer(canvas, false, cameraController));
-            camera.useVR = true;
+            if(Ayce.HMDHandler.isHMDReady()){
+                console.log("direct");
+                pushWebVRModifier();
+            }
+            else{
+                console.log("onHMDReady");
+                Ayce.HMDHandler.onHMDReady = pushWebVRModifier;
+            }
         }
         else{
             console.warn("Browser dosen't support WebVR.");
@@ -63,6 +66,17 @@ Ayce.Scene = function (canvas) {
         }
         return true;
     };
+    
+    function pushWebVRModifier(){
+        console.log("pushWebVRModifier");
+        var cMan = camera.getManager();
+        cMan.modifiers.push(new Ayce.WebVR());
+        camera.update();
+        scope.setRenderer(new Ayce.VRRenderer(canvas, false, cMan));
+        camera.useVR = true;
+        cMan.initHMDControls();
+        scope.resize();
+    }
 
     /**
      * Call for VR rendering for Google Cardboard (and similar viewers). Parameter used to toggle barrel distortion and color abberation on and off.

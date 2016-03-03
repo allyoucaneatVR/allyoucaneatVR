@@ -27,8 +27,4 @@ Ayce.CameraModifier = function(){
     this.getPosition = function(){
         return this.position;
     };
-
-    this.getHMDData = function(){
-        return null;
-    };
 };

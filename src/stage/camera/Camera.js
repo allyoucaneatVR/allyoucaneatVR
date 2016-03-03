@@ -88,21 +88,7 @@ Ayce.Camera = function (cameraManager) {
             return;
         }
  
-        var vr = {};
-        if ( cameraManager.cameraProperties.vrDevice !== undefined ){
-            vr.vrDisplay = cameraManager.cameraProperties.vrDevice;
-            vr.vrTimewarp = true;
-        }
-        
-        if (canvas.requestFullscreen) {
-          canvas.requestFullscreen(vr);
-        } else if (canvas.msRequestFullscreen) {
-          canvas.msRequestFullscreen(vr);
-        } else if (canvas.mozRequestFullScreen) {
-          canvas.mozRequestFullScreen(vr);
-        } else if (canvas.webkitRequestFullscreen) {
-          canvas.webkitRequestFullscreen(vr);
-        }
+        Ayce.HMDHandler.showInHMD(canvas);
     };
 
     /**
