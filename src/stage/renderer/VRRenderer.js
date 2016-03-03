@@ -275,6 +275,8 @@ Ayce.VRRenderer = function (canvas, distorted, cameraController) {
 
         renderObjects(objects, "right");
         renderObjects(transparentObjects, "right");
+        
+        Ayce.HMDHandler.renderToHMD();
     }
 
     /**

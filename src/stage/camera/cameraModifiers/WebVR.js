@@ -13,7 +13,9 @@ Ayce.WebVR = function () {
     var orientation = new Ayce.Quaternion();
     
     this.update = function(playerRotation){
+        Ayce.HMDHandler.update();
         if (Ayce.KeyboardHandler.isKeyDown("R"))Ayce.HMDHandler.resetSensor();
+        if (Ayce.KeyboardHandler.isKeyDown("P"))Ayce.HMDHandler.exitHMD();
         
         var p = Ayce.HMDHandler.getPosition();
         var o = Ayce.HMDHandler.getRotation();

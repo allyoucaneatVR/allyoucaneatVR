@@ -52,11 +52,11 @@ Ayce.Scene = function (canvas) {
         
         if(Ayce.HMDHandler.isWebVRReady()){
             if(Ayce.HMDHandler.isHMDReady()){
-                console.log("direct");
+//                console.log("direct");
                 pushWebVRModifier();
             }
             else{
-                console.log("onHMDReady");
+//                console.log("onHMDReady");
                 Ayce.HMDHandler.onHMDReady = pushWebVRModifier;
             }
         }
@@ -68,7 +68,7 @@ Ayce.Scene = function (canvas) {
     };
     
     function pushWebVRModifier(){
-        console.log("pushWebVRModifier");
+//        console.log("pushWebVRModifier");
         var cMan = camera.getManager();
         cMan.modifiers.push(new Ayce.WebVR());
         camera.update();
