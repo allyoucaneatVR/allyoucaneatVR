@@ -25,7 +25,17 @@ Ayce.HMDHandler = {
      * Description
      */
     update: function(){},
-    showInHMD: function(){return null;},
+    showInHMD: function(canvas){
+        if (canvas.requestFullscreen) {
+          canvas.requestFullscreen();
+        } else if (canvas.msRequestFullscreen) {
+          canvas.msRequestFullscreen();
+        } else if (canvas.mozRequestFullScreen) {
+          canvas.mozRequestFullScreen();
+        } else if (canvas.webkitRequestFullscreen) {
+          canvas.webkitRequestFullscreen();
+        }
+    },
     renderToHMD: function(){},
     exitHMD: function(){},
     resetSensor: function () {return null;},
