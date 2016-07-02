@@ -12,7 +12,7 @@ Ayce.HMDHandler = {
      * Description
      * @return ArrayExpression
      */
-    onHMDReady: null,    
+    onHMDReady: null,
 
     /**
      * Description
@@ -25,21 +25,11 @@ Ayce.HMDHandler = {
      * Description
      */
     update: function(){},
-    showInHMD: function(canvas){
-        if (canvas.requestFullscreen) {
-          canvas.requestFullscreen();
-        } else if (canvas.msRequestFullscreen) {
-          canvas.msRequestFullscreen();
-        } else if (canvas.mozRequestFullScreen) {
-          canvas.mozRequestFullScreen();
-        } else if (canvas.webkitRequestFullscreen) {
-          canvas.webkitRequestFullscreen();
-        }
-    },
+    showInHMD: function(){},
     renderToHMD: function(){},
     exitHMD: function(){},
     resetSensor: function () {return null;},
-    
+
     /**
      * Description
      * @return BinaryExpression
@@ -47,9 +37,9 @@ Ayce.HMDHandler = {
     isWebVRReady: function(){
         return Boolean(navigator.getVRDisplays||navigator.getVRDevices);
     },
-    
+
     isHMDReady: function(){return false;},
-    
+
     getEyeTranslationL: function(){return null;},
     getEyeTranslationR: function(){return null;},
     getEyeFOVL:     function(){return null;},
@@ -70,17 +60,17 @@ Ayce.HMDHandler = {
         console.log("Using WebVR Deprecated API");
         navigator.getVRDevices().then(onVRDevices);
     }
-    
+
     function onVRDisplay(displays){
         if (displays.length < 1)console.warn("WebVR supported, but no VRDisplays found.");
-        
+
         var vrDisplay = displays[0];
         Ayce.HMDHandler = new WebVRHMDHandler(vrDisplay, Ayce.HMDHandler.onHMDReady);
     }
     function onVRDevices(devices){
         var vrDevice = null;
         var positionDevice = null;
-        
+
         //HMD
         for(var i in devices){
             if(devices[i] instanceof HMDVRDevice){
@@ -88,7 +78,7 @@ Ayce.HMDHandler = {
                 break;
             }
         }
-        
+
         //Position
         for(var i in devices){
             if(devices[i] instanceof PositionSensorVRDevice){
@@ -96,14 +86,14 @@ Ayce.HMDHandler = {
                 break;
             }
         }
-        
+
         //
         Ayce.HMDHandler = new WebVRHMDHandler_Deprecated(vrDevice, positionDevice, Ayce.HMDHandler.onHMDReady);
         if(Ayce.HMDHandler.onHMDReady){
             Ayce.HMDHandler.onHMDReady();
         }
     }
-    
+
 })();
 
 function WebVRHMDHandler(vrDisplay, onReady){
@@ -115,17 +105,17 @@ function WebVRHMDHandler(vrDisplay, onReady){
     var orientation = new Ayce.Quaternion();
     var currentPose = vrDisplay.getPose();
     window.addEventListener('vrdisplaypresentchange', onVRPresentChange, false);
-    
+
     this.update = function(){
         currentPose = vrDisplay.getPose();
     };
-    
+
     this.getPosition = function(){
         var p = currentPose.position;
         if(p)position.set(p[0], p[1], p[2]);
         return position;
     };
-    
+
     this.getRotation = function(){
         var o = currentPose.orientation;
         orientation.set(o[0], o[1], o[2], o[3]);
@@ -140,7 +130,7 @@ function WebVRHMDHandler(vrDisplay, onReady){
     };
 
     this.showInHMD = function(canvas){
-        vrDisplay.requestPresent({ source: canvas }).then(function () {
+        vrDisplay.requestPresent([{ source: canvas }]).then(function () {
             //...
         }, function () {
           console.warn("vrDisplay: requestPresent failed.");
@@ -154,21 +144,21 @@ function WebVRHMDHandler(vrDisplay, onReady){
           console.warn("vrDisplay: exitPresent failed.");
         });
     };
-    
-    function onVRPresentChange(){
-        console.log("Presenting in HMD");
+
+    function onVRPresentChange(state){
+        console.log("Presenting in HMD: ",  state);
     }
 
     this.isHMDReady = function(){
         return hmdInitialized;
     };
-    
+
     this.renderToHMD = function(){
         if(vrDisplay.isPresenting){
             vrDisplay.submitFrame(currentPose);
         }
     };
-    
+
     this.getAnimFrame = function(func){
         if(vrDisplay && vrDisplay.isPresenting){
             vrDisplay.requestAnimationFrame(func);
@@ -224,20 +214,20 @@ function WebVRHMDHandler_Deprecated(vrDevice, positionDevice, onReady){
     var eyeParamsR = vrDevice.getEyeParameters( 'right' );
     var position = new Ayce.Vector3();
     var orientation = new Ayce.Quaternion();
-    
+
     //Not supported
     this.update = function(){};
     this.renderToHMD = function(){};
     this.exitHMD = function(){};
-    
-    
+
+
     //
     this.getPosition = function(){
         var p = positionDevice.getState().position;
         if(p)position.set(p.x, p.y, p.z);
         return position;
     };
-    
+
     this.getRotation = function(){
         var o = positionDevice.getState().orientation;
         orientation.set(o.x, o.y, o.z, o.w);

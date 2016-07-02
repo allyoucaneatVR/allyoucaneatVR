@@ -74,8 +74,20 @@ Ayce.Camera = function (cameraManager) {
         if ( isFullscreen === boolean ) return;
         isFullscreen = boolean;
         
+        //Enter Fullscreen
+        if(boolean){
+            if (canvas.requestFullscreen) {
+              canvas.requestFullscreen();
+            } else if (canvas.msRequestFullscreen) {
+              canvas.msRequestFullscreen();
+            } else if (canvas.mozRequestFullScreen) {
+              canvas.mozRequestFullScreen();
+            } else if (canvas.webkitRequestFullscreen) {
+              canvas.webkitRequestFullscreen();
+            }
+        }
         //Exit Fullscreen
-        if(!boolean){
+        else{
             if (document.exitFullscreen) {
               document.exitFullscreen();
             } else if (document.msExitFullscreen) {
@@ -87,8 +99,6 @@ Ayce.Camera = function (cameraManager) {
             }
             return;
         }
- 
-        Ayce.HMDHandler.showInHMD(canvas);
     };
 
     /**
