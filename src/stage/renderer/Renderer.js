@@ -76,10 +76,10 @@ Ayce.Renderer = function (canvas) {
             if(!gl)gl = canvas.getContext("experimental-webgl", attr);
             gl.viewportWidth = canvas.width;
             gl.viewportHeight = canvas.height;
-//            gl.ext = gl.getExtension("OES_vertex_array_object");
-            gl.ext = null;
+            gl.ext = gl.getExtension("OES_vertex_array_object");
+//            gl.ext = null;
             gl.shaders = {};
-//            if(!gl.ext)console.error("Can't get OES_vertex_array_object extension.");
+            if(!gl.ext)console.warn("Can't get OES_vertex_array_object extension.");
 
         } catch (e) {}
         if (!gl) {

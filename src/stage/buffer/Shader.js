@@ -7,7 +7,6 @@
  * @constructor
  */
 Ayce.Shader = function (gl, vertexString, fragmentString) {
-
     var vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertexString);
     gl.compileShader(vertexShader);
@@ -38,7 +37,11 @@ Ayce.Shader = function (gl, vertexString, fragmentString) {
      * Uses shader program
      */
     this.initShaders = function () {
+        if(shaderProgram === Ayce.Shader.prototype.currentShader){
+            return;
+        }
         gl.useProgram(shaderProgram);
+        Ayce.Shader.prototype.currentShader = shaderProgram;
     };
 
     /**
@@ -61,5 +64,5 @@ Ayce.Shader = function (gl, vertexString, fragmentString) {
 };
 
 Ayce.Shader.prototype = {
-
+    currentShader: null
 };

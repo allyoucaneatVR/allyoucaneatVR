@@ -74,8 +74,20 @@ Ayce.Camera = function (cameraManager) {
         if ( isFullscreen === boolean ) return;
         isFullscreen = boolean;
         
+        //Enter Fullscreen
+        if(boolean){
+            if (canvas.requestFullscreen) {
+              canvas.requestFullscreen();
+            } else if (canvas.msRequestFullscreen) {
+              canvas.msRequestFullscreen();
+            } else if (canvas.mozRequestFullScreen) {
+              canvas.mozRequestFullScreen();
+            } else if (canvas.webkitRequestFullscreen) {
+              canvas.webkitRequestFullscreen();
+            }
+        }
         //Exit Fullscreen
-        if(!boolean){
+        else{
             if (document.exitFullscreen) {
               document.exitFullscreen();
             } else if (document.msExitFullscreen) {
@@ -86,22 +98,6 @@ Ayce.Camera = function (cameraManager) {
               document.webkitExitFullscreen();
             }
             return;
-        }
- 
-        var vr = {};
-        if ( cameraManager.cameraProperties.vrDevice !== undefined ){
-            vr.vrDisplay = cameraManager.cameraProperties.vrDevice;
-            vr.vrTimewarp = true;
-        }
-        
-        if (canvas.requestFullscreen) {
-          canvas.requestFullscreen(vr);
-        } else if (canvas.msRequestFullscreen) {
-          canvas.msRequestFullscreen(vr);
-        } else if (canvas.mozRequestFullScreen) {
-          canvas.mozRequestFullScreen(vr);
-        } else if (canvas.webkitRequestFullscreen) {
-          canvas.webkitRequestFullscreen(vr);
         }
     };
 

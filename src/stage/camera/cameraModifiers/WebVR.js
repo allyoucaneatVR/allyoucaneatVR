@@ -11,36 +11,16 @@ Ayce.WebVR = function () {
     var scope = this;
     var position = new Ayce.Vector3();
     var orientation = new Ayce.Quaternion();
-    var o = new Ayce.Quaternion();
-    var p = new Ayce.Vector3();
-
-    /**
-     * Description
-     * @return CallExpression
-     */
-    this.getHMDData = function(){
-        return Ayce.HMDHandler.getHMDData();
-    };
     
     this.update = function(playerRotation){
+        Ayce.HMDHandler.update();
         if (Ayce.KeyboardHandler.isKeyDown("R"))Ayce.HMDHandler.resetSensor();
-        var data = Ayce.HMDHandler.getPositionalData();
         
-        if(data){
-            if(data.position){
-                position.x = data.position.x;
-                position.y = data.position.y;
-                position.z = data.position.z;
-                position.w = data.position.w;
-            }
-            orientation.x = data.orientation.x;
-            orientation.y = data.orientation.y;
-            orientation.z = data.orientation.z;
-            orientation.w = data.orientation.w;
-        }
+        var p = Ayce.HMDHandler.getPosition();
+        var o = Ayce.HMDHandler.getRotation();
         
-        position = o.multiply(playerRotation, orientation.getConjugate()).rotatePoint(p);
-        orientation = orientation.getConjugate();
+        orientation = o.getConjugate();
+        position = o.multiply(playerRotation, orientation).rotatePoint(p);
     };
 
     /**   //TODO: remove if HMD still works

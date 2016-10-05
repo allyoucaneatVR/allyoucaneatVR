@@ -16,6 +16,7 @@ Ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
     var textures = [];
     var specularMaps = [];
     var normalMaps = [];
+    
     var vertexIndexBuffer;
     var interlacedBuffer;
 
@@ -63,27 +64,40 @@ Ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
             var u = uniforms[i];
             u[4] = new Array(1+u[3].length);
             u[4][0] = shader.getUniformLocation(u[0]);
+            
+//            u[5] = new Array(3);
+//            u[5][0] = gl[u[1]];
+//            u[5][1] = shader.getUniformLocation(u[0]);
+//            var data;
+//            if(u[1] == "uniformMatrix2fv" || u[1] == "uniformMatrix3fv" || u[1] == "uniformMatrix4fv"){
+//                data = new Array(3); 
+//            }
+//            else{
+//                data = new Array(2);
+//                data[1] = [];
+//            }
+//            u[5][2] = [];
         }
 
         //Bind Textures
         if (this.useTexture) {
             shader.samplerUniform = shader.getUniformLocation("uSampler");
             for(i=0; i<this.texturesO3D.length; i++){
-                textures.push(this.loadTexture(gl, this.texturesO3D[i], this.isSkybox));
+                textures.push(this.loadImage(gl, this.texturesO3D[i], this.isSkybox));
             }
         }
         if(this.useSpecularMap){
             this.texturesO3D = (Array.isArray(object3D.specularMap)) ? object3D.specularMap : [object3D.specularMap];
             shader.specularMapUniform = shader.getUniformLocation("uSpecularMapSampler");
             for(i=0; i<this.texturesO3D.length; i++){
-                specularMaps.push(this.loadTexture(gl, this.texturesO3D[i], this.isSkybox));
+                specularMaps.push(this.loadImage(gl, this.texturesO3D[i], this.isSkybox));
             }
         }
         if(this.useNormalMap){
             this.texturesO3D = (Array.isArray(object3D.normalMap)) ? object3D.normalMap : [object3D.normalMap];
             shader.normalMapUniform = shader.getUniformLocation("uNormalMapSampler");
             for(i=0; i<this.texturesO3D.length; i++){
-                normalMaps.push(this.loadTexture(gl, this.texturesO3D[i], this.isSkybox));
+                normalMaps.push(this.loadImage(gl, this.texturesO3D[i], this.isSkybox));
             }
         }
 
@@ -128,7 +142,6 @@ Ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
             gl.ext.bindVertexArrayOES(null);
         }
     };
-
 
     /**
      * *******************************************
@@ -212,21 +225,89 @@ Ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
             gl.uniform1i(shader.normalMapUniform, 1);
         }
 
-        // Set uniforms
+        //Update uniform data
         for(i=0; i < uniforms.length; i++){
             var u = uniforms[i];
-            u[4][1] = u[3];
+            u[4][1] = u[3];//UniLocation
 
             if(u[2]){
                 for(var j=0; j<u[3].length; j++){
-                    u[4][j+1] = u[2][u[3][j]];
+                    u[4][j+1] = u[2][u[3][j]];//UniData
                 }
             }
         }
+        //Send uniforms
         for(i=0; i < uniforms.length; i++){
-            gl[uniforms[i][1]].apply(gl, uniforms[i][4]);
+//            gl[uniforms[i][1]].apply(gl, uniforms[i][4]);
+//            uniforms[i][5][0].apply(gl, uniforms[i][4]);
+            
+            //uniform1
+            if(uniforms[i][1] === "uniform1f"){
+                gl.uniform1f(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            else if(uniforms[i][1] === "uniform1fv"){
+                gl.uniform1fv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            else if(uniforms[i][1] === "uniform1i"){
+                gl.uniform1i(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            else if(uniforms[i][1] === "uniform1iv"){
+                gl.uniform1iv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            //uniform2
+            else if(uniforms[i][1] === "uniform2f"){
+                gl.uniform2f(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2]);
+            }
+            else if(uniforms[i][1] === "uniform2fv"){
+                gl.uniform2fv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            else if(uniforms[i][1] === "uniform2i"){
+                gl.uniform2i(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2]);
+            }
+            else if(uniforms[i][1] === "uniform2iv"){
+                gl.uniform2iv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            //uniform3
+            else if(uniforms[i][1] === "uniform3f"){
+                gl.uniform3f(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2], uniforms[i][4][3]);
+            }
+            else if(uniforms[i][1] === "uniform3fv"){
+                gl.uniform3fv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            else if(uniforms[i][1] === "uniform3i"){
+                gl.uniform3i(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2], uniforms[i][4][3]);
+            }
+            else if(uniforms[i][1] === "uniform3iv"){
+                gl.uniform3iv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            //uniform4
+            else if(uniforms[i][1] === "uniform4f"){
+                gl.uniform4f(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2], uniforms[i][4][3], uniforms[i][4][4]);
+            }
+            else if(uniforms[i][1] === "uniform4fv"){
+                gl.uniform4fv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            else if(uniforms[i][1] === "uniform4i"){
+                gl.uniform4i(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2], uniforms[i][4][3], uniforms[i][4][4]);
+            }
+            else if(uniforms[i][1] === "uniform4iv"){
+                gl.uniform4iv(uniforms[i][4][0], uniforms[i][4][1]);
+            }
+            //matrices
+            else if(uniforms[i][1] === "uniformMatrix2fv"){
+                gl.uniformMatrix2fv(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2]);
+            }
+            else if(uniforms[i][1] === "uniformMatrix3fv"){
+                gl.uniformMatrix3fv(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2]);
+            }
+            else if(uniforms[i][1] === "uniformMatrix4fv"){
+                gl.uniformMatrix4fv(uniforms[i][4][0], uniforms[i][4][1], uniforms[i][4][2]);
+            }
+            
+            else{
+                throw "Unkown: " + uniforms[i][1];
+            }
         }
-
 
         //Bind VAO and Draw O3D
         if(gl.ext){
@@ -263,6 +344,14 @@ Ayce.Buffer = function (gl, object3D, shader, attributes, uniforms, drawMode) {
 //        for(i=0; i < textures.length; i++){
 //            gl.deleteTexture(textures[i]);
 //        }
+    };
+    
+    this.getTextureData = function(){
+        return {
+            textures: textures,
+            specularMaps: specularMaps,
+            normalMaps: normalMaps
+        };
     };
 };
 
@@ -301,7 +390,8 @@ Ayce.Buffer.prototype = {
      * @param {Boolean} clampToEdge
      * @return {Object} texture
      */
-    loadTexture: function(gl, source, clampToEdge){
+    loadImage: function(gl, source, clampToEdge){
+        var scope = this;
         // generate texture
         var texture = gl.createTexture();
         //Bind Texture
@@ -325,7 +415,7 @@ Ayce.Buffer.prototype = {
             texture.image.onload = function () {
                 if(false){
                     var canvas = document.createElement("canvas");
-                    var a = Math.min(texture.image.width, texture.image.height)/256;
+                    var a = Math.min(texture.image.width, texture.image.height)/128;
 
                     canvas.width = texture.image.width/a;
                     canvas.height = texture.image.height/a;
@@ -333,20 +423,24 @@ Ayce.Buffer.prototype = {
                     ctx.drawImage(texture.image, 0, 0, canvas.width, canvas.height);
                     texture.image = canvas;
                 }
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapMode);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapMode);
-                gl.generateMipmap(gl.TEXTURE_2D);
-                gl.bindTexture(gl.TEXTURE_2D, null);
+                scope.loadTexture(gl, texture, texture.image, wrapMode);
                 texture.loaded = true;
             };
             this.loadedTextures[source] = texture;
         }
         return texture;
+    },
+    loadTexture: function(gl, glTexture, image, wrapMode){
+        wrapMode = wrapMode || gl.REPEAT;
+        gl.bindTexture(gl.TEXTURE_2D, glTexture);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapMode);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapMode);
+            gl.generateMipmap(gl.TEXTURE_2D);
+        gl.bindTexture(gl.TEXTURE_2D, null);
     },
     /**
      * Activates and binds texture

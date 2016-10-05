@@ -14,36 +14,27 @@ Ayce.CameraManager = function(){
     var orientation = new Ayce.Quaternion();
 
     this.cameraProperties = {
-        vrDevice: null,
         eyeTranslationL: -0.03,
         eyeTranslationR: 0.03,
         eyeFOVR: 90,
+        eyeFOVL: null,
         renderRectWidth: null,
         renderRectHeight: null
     };
 
-    this.modifiers = [];//(Array.isArray(device)) ? device: [device];
-    var isHMDInitialized = false;// !this.isInputVR();
+    this.modifiers = [];
 
     /**
      * Sets up HMD input for the Oculus Rift.
      * @param {Object} hmdData
      */
-    var initHMDControls = function(hmdData){
-        var eyeParamsL = hmdData[0];
-        var eyeParamsR = hmdData[1];
-
-        scope.cameraProperties.vrDevice = vrDevice;
-        scope.cameraProperties.eyeTranslationL = eyeParamsL.eyeTranslation.x;
-        scope.cameraProperties.eyeTranslationR = eyeParamsR.eyeTranslation.x;
-        scope.cameraProperties.eyeFOVL = eyeParamsL.recommendedFieldOfView;
-        scope.cameraProperties.eyeFOVR = eyeParamsR.recommendedFieldOfView;
-
-        //RenderRect size
-        var leftEyeRect = eyeParamsL.renderRect;
-        var rightEyeRect = eyeParamsR.renderRect;
-        scope.cameraProperties.renderRectWidth = rightEyeRect.x + rightEyeRect.width;
-        scope.cameraProperties.renderRectHeight = Math.max(leftEyeRect.y + leftEyeRect.height, rightEyeRect.y + rightEyeRect.height);
+    this.initHMDControls = function(){
+        scope.cameraProperties.eyeTranslationL  = Ayce.HMDHandler.getEyeTranslationL();
+        scope.cameraProperties.eyeTranslationR  = Ayce.HMDHandler.getEyeTranslationR();
+        scope.cameraProperties.eyeFOVL          = Ayce.HMDHandler.getEyeFOVL();
+        scope.cameraProperties.eyeFOVR          = Ayce.HMDHandler.getEyeFOVR();
+        scope.cameraProperties.renderRectWidth  = Ayce.HMDHandler.getEyeWidthR() + Ayce.HMDHandler.getEyeWidthL();
+        scope.cameraProperties.renderRectHeight = Math.max(Ayce.HMDHandler.getEyeHeightR(), Ayce.HMDHandler.getEyeHeightL());
     };
 
     /**
@@ -59,13 +50,6 @@ Ayce.CameraManager = function(){
         orientation.reset();
         
         for(i=0; i<this.modifiers.length; i++){
-            if(!isHMDInitialized && this.modifiers[i] instanceof Ayce.WebVR){
-                var hmdData = this.modifiers[i].getHMDData();
-                if(hmdData !== null){
-                    initHMDControls(hmdData);
-                    isHMDInitialized = true;
-                }
-            }
             orientation.multiply(orientation, this.modifiers[i].getOrientation());
             var pos = this.modifiers[i].getPosition();
             position.add(pos.x, pos.y, pos.z);

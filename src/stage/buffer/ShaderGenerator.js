@@ -5,7 +5,7 @@
  */
 Ayce.ShaderGenerator = function () {
 
-    this.lightsCount = 4;
+    this.lightsCount = 2;
     this.texturesCount = 1;
     this.useNormals = false;
     this.useVertexLighting = false;
@@ -85,7 +85,7 @@ Ayce.ShaderGenerator = function () {
                 "uniform vec3 uAmbientColor;" +
                 "uniform vec3 uPointLightingLocations[" + this.lightsCount + "];" +
                 "uniform vec3 uPointLightingColors[" + this.lightsCount + "];" +
-                "uniform float uLightIndex;";
+                "const int cLightCount = " + this.lightsCount + ";";
 
             if(this.useSpecularLighting){
                 this.vertexShader +=
@@ -232,7 +232,7 @@ Ayce.ShaderGenerator = function () {
                 "uniform vec3 uAmbientColor;" +
                 "uniform vec3 uPointLightingLocations[" + this.lightsCount + "];" +
                 "uniform vec3 uPointLightingColors[" + this.lightsCount + "];" +
-                "uniform float uLightIndex;";
+                "const int cLightCount = " + this.lightsCount + ";";
 
             if(this.useSpecularLighting){
                 this.fragmentShader +=
@@ -339,24 +339,22 @@ Ayce.ShaderGenerator.prototype = {
      */
     getVertexLightingWeightCalcArrayVertex: function(lightsCount, useSpecularLighting){
         var string = "";
-        for(var i=0; i < lightsCount; i++){
-            string +=
-                "if(uLightIndex-"+(i+1)+".0>-0.01){" +
-                "vec3 lightDirection = normalize(uPointLightingLocations["+i+"] - position.xyz);" +
-                "vec3 reflectionDirection = reflect(-lightDirection, normal);" +
-                "float diffuseLightWeighting = max(dot(normalize(transformedNormal), lightDirection), 0.0);";
+        string +=
+            "for(int i = 0; i < cLightCount; i++){" +
+            "vec3 lightDirection = normalize(uPointLightingLocations[i] - position.xyz);" +
+            "vec3 reflectionDirection = reflect(-lightDirection, normal);" +
+            "float diffuseLightWeighting = max(dot(normalize(transformedNormal), lightDirection), 0.0);";
 
-            if(useSpecularLighting) {
-                string +=
-                    "float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uShininess);" +
-                    "vLightWeighting += uPointLightingColors[" + i + "] * diffuseLightWeighting + uSpecularColors[" + i + "] * specularLightWeighting;";
-            }else{
-                string +=
-                    "vLightWeighting += uPointLightingColors[" + i + "] * diffuseLightWeighting;";
-            }
-            string+=
-                "}";
+        if(useSpecularLighting) {
+            string +=
+                "float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uShininess);" +
+                "vLightWeighting += uPointLightingColors[i] * diffuseLightWeighting + uSpecularColors[i] * specularLightWeighting;";
+        }else{
+            string +=
+                "vLightWeighting += uPointLightingColors[i] * diffuseLightWeighting;";
         }
+        string+=
+            "}";
         return string;
     },
     /**
@@ -369,41 +367,39 @@ Ayce.ShaderGenerator.prototype = {
      */
     getFragmentLightingWeightCalcArrayVertex: function(lightsCount, useSpecularMap, useNormalMap, useSpecularLighting){
         var string = "";
-        for(var i=0; i < lightsCount; i++){
-            string += "" +
-                "if(uLightIndex-"+(i+1)+".0>-0.01){" +
-                "vec3 lightDirection = normalize(uPointLightingLocations["+i+"] - vPosition.xyz);" +
-                "vec3 reflectionDirection = reflect(-lightDirection, normal);";
-            if(useSpecularMap){
-                string +=
-                    "float shininess = texture2D(uSpecularMapSampler, 255.0-vec2(vTextureCoord.s, vTextureCoord.t)).r * 255.0 * uShininess;" +
-                    "float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), shininess);";
-            }else {
-                if(useSpecularLighting) {
-                    string +=
-                        "float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uShininess);";
-                }
-            }
-
-            if(useNormalMap){
-                string+=
-                    "vec3 normalMap = texture2D(uNormalMapSampler, vec2(vTextureCoord.s, vTextureCoord.t)).rgb*2.0-1.0;" +
-                    "float diffuseLightWeighting = max(dot(normalize(normalMap), lightDirection), 0.0);"
-            }else{
-                string+=
-                    "float diffuseLightWeighting = max(dot(normalize(vTransformedNormal), lightDirection), 0.0);"
-            }
-
+        string += "" +
+            "for(int i = 0; i < cLightCount; i++){" +
+            "vec3 lightDirection = normalize(uPointLightingLocations[i] - vPosition.xyz);" +
+            "vec3 reflectionDirection = reflect(-lightDirection, normal);";
+        if(useSpecularMap){
+            string +=
+                "float shininess = texture2D(uSpecularMapSampler, 255.0-vec2(vTextureCoord.s, vTextureCoord.t)).r * 255.0 * uShininess;" +
+                "float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), shininess);";
+        }else {
             if(useSpecularLighting) {
                 string +=
-                    "lightWeighting += uPointLightingColors[" + i + "] * diffuseLightWeighting + uSpecularColors[" + i + "] * specularLightWeighting;";
-            }else{
-                string +=
-                    "lightWeighting += uPointLightingColors[" + i + "] * diffuseLightWeighting;";
+                    "float specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uShininess);";
             }
-            string+=
-                "}";
         }
+
+        if(useNormalMap){
+            string+=
+                "vec3 normalMap = texture2D(uNormalMapSampler, vec2(vTextureCoord.s, vTextureCoord.t)).rgb*2.0-1.0;" +
+                "float diffuseLightWeighting = max(dot(normalize(normalMap), lightDirection), 0.0);";
+        }else{
+            string+=
+                "float diffuseLightWeighting = max(dot(normalize(vTransformedNormal), lightDirection), 0.0);";
+        }
+
+        if(useSpecularLighting) {
+            string +=
+                "lightWeighting += uPointLightingColors[i] * diffuseLightWeighting + uSpecularColors[i] * specularLightWeighting;";
+        }else{
+            string +=
+                "lightWeighting += uPointLightingColors[i] * diffuseLightWeighting;";
+        }
+        string+=
+            "}";
         return string;
     },
     /**
