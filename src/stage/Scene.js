@@ -7,7 +7,7 @@
  * @param canvas
  * @constructor
  */
-Ayce.Scene = function (canvas) {
+Ayce.Scene = function(canvas) {
     var scope = this;
     var i = 0;
     var recalcBuffers = true;
@@ -25,16 +25,16 @@ Ayce.Scene = function (canvas) {
     this.width = canvas.parentNode.clientWidth;
     this.height = canvas.parentNode.clientHeight;
 
-//////////////////////////////////////////////////////////////////////////////////////
-//Scene presentation
+    //////////////////////////////////////////////////////////////////////////////////////
+    //Scene presentation
 
     this.presentationPreset = {
         /**
          * Returns true if WebVR compatible browser is being used
          * @returns {Boolean} isWebVR
          */
-        useWebVR: function(){
-            var pushWebVRModifier = function(){
+        useWebVR: function() {
+            var pushWebVRModifier = function() {
                 var cMan = camera.getManager();
                 cMan.modifiers.push(new Ayce.WebVR());
                 camera.update();
@@ -45,19 +45,17 @@ Ayce.Scene = function (canvas) {
             };
             var m = camera.getManager().modifiers;
 
-            if(m && m.length > 0){
+            if (m && m.length > 0) {
                 throw "Camera modifiers not empty. Please call camera.getManager().clearModifiers() first.";
             }
 
-            if(Ayce.HMDHandler.isWebVRReady()){
-                if(Ayce.HMDHandler.isHMDReady()){
+            if (Ayce.HMDHandler.isWebVRReady()) {
+                if (Ayce.HMDHandler.isHMDReady()) {
                     pushWebVRModifier();
-                }
-                else{
+                } else {
                     Ayce.HMDHandler.onHMDReady = pushWebVRModifier;
                 }
-            }
-            else{
+            } else {
                 console.warn("Browser dosen't support WebVR.");
                 return null;
             }
@@ -68,41 +66,40 @@ Ayce.Scene = function (canvas) {
          * Call for VR rendering for Google Cardboard (and similar viewers). Parameter used to toggle barrel distortion and color abberation on and off.
          * @param {Boolean} distorted
          */
-        useCardboard: function(distorted){
-            this.useMotionSensor();
-            this.setRendererVR(distorted);
+        useCardboard: function(distorted) {
+            scope.useMotionSensor();
+            scope.setRendererVR(distorted);
             camera.useVR = true;
-            this.resize();
+            scope.resize();
         },
     };
 
-    this.setFullscreenElement = function(domElement){
+    this.setFullscreenElement = function(domElement) {
         var scope = this;
         var lock = null;
 
-        domElement.addEventListener('click', function(){
+        domElement.addEventListener('click', function() {
             var camera = scope.getCamera();
             camera.setFullscreen(!camera.isFullscreen(), canvas);
 
             //Mobile VR screenlock/wakeLock(TODO)
-            if(camera.isFullscreen()){
+            if (camera.isFullscreen()) {
                 if ('orientation' in screen) {
-                    screen.orientation.lock('landscape-primary').catch(function(){});
+                    screen.orientation.lock('landscape-primary').catch(function() {});
                 }
-                if(window.navigator.requestWakeLock){
+                if (window.navigator.requestWakeLock) {
                     lock = window.navigator.requestWakeLock('screen');
                 }
-                if(window.navigator.wakeLock){
+                if (window.navigator.wakeLock) {
                     window.navigator.wakeLock.request('screen');
                 }
                 screen.keepAwake = true;
                 Ayce.HMDHandler.showInHMD(canvas);
-            }
-            else{
+            } else {
                 if ('orientation' in screen) {
-                    screen.orientation.unlock().catch(function(){});
+                    screen.orientation.unlock().catch(function() {});
                 }
-                if(window.navigator.requestWakeLock && lock){
+                if (window.navigator.requestWakeLock && lock) {
                     lock.unlock();
                 }
                 screen.keepAwake = false;
@@ -112,25 +109,25 @@ Ayce.Scene = function (canvas) {
     };
 
 
-//////////////////////////////////////////////////////////////////////////////////////
-//Scene input
+    //////////////////////////////////////////////////////////////////////////////////////
+    //Scene input
 
     /**
      * Sets up motion sensors as input for Google Cardboard (and similar viewers).
      */
-    this.useMotionSensor = function(){
+    this.useMotionSensor = function() {
         var m = camera.getManager().modifiers;
-        if(m && m.length > 0)throw "Camera modifiers not empty. Please call camera.getManager().clearModifiers() first.";
+        if (m && m.length > 0) throw "Camera modifiers not empty. Please call camera.getManager().clearModifiers() first.";
         m.push(new Ayce.Cardboard());
     };
 
-//////////////////////////////////////////////////////////////////////////////////////
-//Scene initialization
+    //////////////////////////////////////////////////////////////////////////////////////
+    //Scene initialization
 
     /**
      * Should be called on window resize
      */
-    this.resize = function () {
+    this.resize = function() {
         this.width = canvas.parentNode.clientWidth;
         this.height = canvas.parentNode.clientHeight;
         renderer.width = this.width;
@@ -144,7 +141,7 @@ Ayce.Scene = function (canvas) {
     /**
      * Sets up rendering for desktop browsers
      */
-    this.setRendererDesktop = function(){
+    this.setRendererDesktop = function() {
         this.setRenderer(new Ayce.Renderer(canvas));
         camera.useVR = false;
         this.resize();
@@ -154,7 +151,7 @@ Ayce.Scene = function (canvas) {
      * Sets up rendering for VR on mobile browsers
      * @param {Boolean} distorted
      */
-    this.setRendererVR = function(distorted){
+    this.setRendererVR = function(distorted) {
         this.setRenderer(new Ayce.VRRenderer(canvas, distorted));
         camera.useVR = true;
         this.resize();
@@ -164,9 +161,9 @@ Ayce.Scene = function (canvas) {
      * Sets current renderer
      * @param {Ayce.Renderer} rendererObject
      */
-    this.setRenderer = function(rendererObject){
+    this.setRenderer = function(rendererObject) {
         var shaders = null;
-        if(renderer){
+        if (renderer) {
             rendererObject.clearColor = renderer.clearColor;
             shaders = renderer.getGL().shaders;
         }
@@ -178,7 +175,7 @@ Ayce.Scene = function (canvas) {
         canvas.style.width = "auto";
         canvas.style.height = "auto";
 
-        if(shaders){
+        if (shaders) {
             renderer.getGL().shaders = shaders;
         }
     };
@@ -186,21 +183,20 @@ Ayce.Scene = function (canvas) {
     //setup scene
     this.setRendererDesktop();
 
-    if(window.attachEvent) {
+    if (window.attachEvent) {
         window.attachEvent('onresize', this.resize);
-    }
-    else if(window.addEventListener) {
+    } else if (window.addEventListener) {
         window.addEventListener('resize', this.resize, true);
     }
 
-//////////////////////////////////////////////////////////////////////////////////////
-//Scene Management
+    //////////////////////////////////////////////////////////////////////////////////////
+    //Scene Management
 
     /**
      * Updates input, camera, lights, objects, renderer and sound
      */
-    this.updateScene = function () {
-        if(recalcBuffers){
+    this.updateScene = function() {
+        if (recalcBuffers) {
             calcO3DBuffers(objects);
             calcO3DBuffers(transparentObjects);
             recalcBuffers = false;
@@ -216,16 +212,16 @@ Ayce.Scene = function (canvas) {
         lightContainer.update(camera);
 
         //update objects
-        for(i=0; i < objects.length; i++){
+        for (i = 0; i < objects.length; i++) {
             objects[i].update();
         }
-        for(i=0; i < transparentObjects.length; i++){
+        for (i = 0; i < transparentObjects.length; i++) {
             transparentObjects[i].update();
         }
         renderer.update(camera, objects, transparentObjects);
 
         //update sounds
-        for(i=0;i<sounds.length;i++){
+        for (i = 0; i < sounds.length; i++) {
             //sounds[i].listener = camera.getControls().position;
             sounds[i].listenerPosition = camera.getManager().getGlobalPosition();
             var orientation = camera.getManager().getGlobalRotation();
@@ -244,12 +240,12 @@ Ayce.Scene = function (canvas) {
     /**
      * Draws objects that have been added to the scene
      */
-    this.drawScene = function () {
-        if(this.render && ! recalcBuffers) {
+    this.drawScene = function() {
+        if (this.render && !recalcBuffers) {
             // Sort transparent objects for rendering
             var highestDistance = 0;
             for (var i = 0; i < transparentObjects.length; i++) {
-                if (!transparentObjects[i].renderPriority) {     // Sort by distance to camera
+                if (!transparentObjects[i].renderPriority) { // Sort by distance to camera
                     var position = transparentObjects[i].getGlobalPosition();
                     var cc = camera.getManager();
 
@@ -262,7 +258,7 @@ Ayce.Scene = function (canvas) {
                     if (transparentObjects[i].distance > highestDistance) highestDistance = transparentObjects[i].distance;
                 }
             }
-            for (i = 0; i < transparentObjects.length; i++) {       // Sort by priority if available
+            for (i = 0; i < transparentObjects.length; i++) { // Sort by priority if available
                 if (transparentObjects[i].renderPriority) {
                     if (transparentObjects[i].renderPriority > 0) {
                         transparentObjects[i].distance = highestDistance + transparentObjects[i].renderPriority;
@@ -272,7 +268,7 @@ Ayce.Scene = function (canvas) {
                 }
             }
 
-            transparentObjects.sort(function (a, b) {
+            transparentObjects.sort(function(a, b) {
                 return b.distance - a.distance;
             });
 
@@ -281,9 +277,9 @@ Ayce.Scene = function (canvas) {
         }
     };
 
-    var calcO3DBuffers = function(o3DArray){
-        for(i=0; i < o3DArray.length; i++){
-            if(o3DArray[i].buffer){
+    var calcO3DBuffers = function(o3DArray) {
+        for (i = 0; i < o3DArray.length; i++) {
+            if (o3DArray[i].buffer) {
                 o3DArray[i].buffer.dispose();
             }
             o3DArray[i].buffer = renderer.getBuffer(o3DArray[i], lightContainer);
@@ -294,7 +290,7 @@ Ayce.Scene = function (canvas) {
      * Adds light, object or sound to scene
      * @param {Ayce.Light|Ayce.Object3D|Ayce.Sound} object
      */
-    this.addToScene = function (object) {
+    this.addToScene = function(object) {
 
         //Add Light to Scene
         if (object instanceof Ayce.Light) {
@@ -304,23 +300,22 @@ Ayce.Scene = function (canvas) {
 
         //Add O3D to Scene
         else if (object instanceof Ayce.Object3D) {
-            if(!recalcBuffers){
+            if (!recalcBuffers) {
                 object.buffer = renderer.getBuffer(object, lightContainer);
             }
             object.calcBoundingBox();
             object.calcBoundingSphere();
 
-            if(object.transparent){
+            if (object.transparent) {
                 transparentObjects.push(object);
-            }
-            else{
+            } else {
                 objects.push(object);
             }
 
         }
 
         //Add Sound
-        else if(object instanceof Ayce.Sound){
+        else if (object instanceof Ayce.Sound) {
             object.init(audioContext);
             sounds.push(object);
         }
@@ -335,45 +330,43 @@ Ayce.Scene = function (canvas) {
      * Removes light, object or sound from scene
      * @param {Ayce.Light|Ayce.Object3D|Ayce.Sound} object
      */
-    this.removeFromScene = function (object) {
+    this.removeFromScene = function(object) {
         //Remove Light from Scene
         if (object instanceof Ayce.Light) {
             lightContainer.removeLight(object);
         }
         //Remove o3D from Scene
         else if (object instanceof Ayce.Object3D) {
-            for (i=0; i < objects.length; i++) {
+            for (i = 0; i < objects.length; i++) {
                 if (objects[i] === object) {
                     objects.splice(i, 1);
                 }
             }
-            for (i=0; i < transparentObjects.length; i++) {
+            for (i = 0; i < transparentObjects.length; i++) {
                 if (transparentObjects[i] === object) {
                     transparentObjects.splice(i, 1);
                 }
             }
-        }
-        else if(object instanceof Ayce.Sound){
-            for (i=0; i < sounds.length; i++) {
+        } else if (object instanceof Ayce.Sound) {
+            for (i = 0; i < sounds.length; i++) {
                 if (sounds[i] === object) {
                     sounds[i].stop();
                     sounds.splice(i, 1);
                 }
             }
-        }
-        else {
+        } else {
             throw "Can't remove from scene: " + typeof object;
         }
     };
 
-///////////////////////////////////////////////////////////////////////////////////////
-//Getter / Setter
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //Getter / Setter
 
     /**
      * Returns camera object of the ayce scene
      * @returns {Ayce.Camera} camera
      */
-    this.getCamera = function () {
+    this.getCamera = function() {
         return camera;
     };
 
@@ -383,7 +376,7 @@ Ayce.Scene = function (canvas) {
      * @param {Number} green - green value between 0.0 and 1.0
      * @param {Number} blue - blue value between 0.0 and 1.0
      */
-    this.setClearColor = function(red, green, blue){
+    this.setClearColor = function(red, green, blue) {
         renderer.clearColor.red = red;
         renderer.clearColor.green = green;
         renderer.clearColor.blue = blue;
@@ -396,7 +389,7 @@ Ayce.Scene = function (canvas) {
      * @param {Number} green - green value between 0.0 and 1.0
      * @param {Number} blue - blue value between 0.0 and 1.0
      */
-    this.setAmbientLight = function(red, green, blue){
+    this.setAmbientLight = function(red, green, blue) {
         lightContainer.ambientLight.red = red;
         lightContainer.ambientLight.green = green;
         lightContainer.ambientLight.blue = blue;
@@ -404,15 +397,15 @@ Ayce.Scene = function (canvas) {
 
 };
 
-Ayce.WebVRAccess = function(canvas){
-      this.setHMDEnterElement = function(domElement){
-          domElement.addEventListener('click', function(){
-              Ayce.HMDHandler.showInHMD(canvas);
-          });
-      };
-      this.setHMDExitElement = function(domElement){
-          domElement.addEventListener('click', function(){
-              Ayce.HMDHandler.exitHMD();
-          });
-      };
+Ayce.WebVRAccess = function(canvas) {
+    this.setHMDEnterElement = function(domElement) {
+        domElement.addEventListener('click', function() {
+            Ayce.HMDHandler.showInHMD(canvas);
+        });
+    };
+    this.setHMDExitElement = function(domElement) {
+        domElement.addEventListener('click', function() {
+            Ayce.HMDHandler.exitHMD();
+        });
+    };
 };

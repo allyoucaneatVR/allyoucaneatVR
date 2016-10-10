@@ -7,7 +7,7 @@
  * @class
  * @constructor
  */
-Ayce.CameraManager = function(){
+Ayce.CameraManager = function() {
     var scope = this;
 
     var position = new Ayce.Vector3();
@@ -28,28 +28,28 @@ Ayce.CameraManager = function(){
      * Sets up HMD input for the Oculus Rift.
      * @param {Object} hmdData
      */
-    this.initHMDControls = function(){
-        scope.cameraProperties.eyeTranslationL  = Ayce.HMDHandler.getEyeTranslationL();
-        scope.cameraProperties.eyeTranslationR  = Ayce.HMDHandler.getEyeTranslationR();
-        scope.cameraProperties.eyeFOVL          = Ayce.HMDHandler.getEyeFOVL();
-        scope.cameraProperties.eyeFOVR          = Ayce.HMDHandler.getEyeFOVR();
-        scope.cameraProperties.renderRectWidth  = Ayce.HMDHandler.getEyeWidthR() + Ayce.HMDHandler.getEyeWidthL();
+    this.initHMDControls = function() {
+        scope.cameraProperties.eyeTranslationL = Ayce.HMDHandler.getEyeTranslationL();
+        scope.cameraProperties.eyeTranslationR = Ayce.HMDHandler.getEyeTranslationR();
+        scope.cameraProperties.eyeFOVL = Ayce.HMDHandler.getEyeFOVL();
+        scope.cameraProperties.eyeFOVR = Ayce.HMDHandler.getEyeFOVR();
+        scope.cameraProperties.renderRectWidth = Ayce.HMDHandler.getEyeWidthR() + Ayce.HMDHandler.getEyeWidthL();
         scope.cameraProperties.renderRectHeight = Math.max(Ayce.HMDHandler.getEyeHeightR(), Ayce.HMDHandler.getEyeHeightL());
     };
 
     /**
      * Updates position and orientation variables based on all added input methods.
      */
-    this.update = function(){
+    this.update = function() {
         var i;
-        for(i=0; i<this.modifiers.length; i++){
+        for (i = 0; i < this.modifiers.length; i++) {
             this.modifiers[i].update(this.getGlobalRotation().getConjugate());
         }
-        
+
         position.nullVector();
         orientation.reset();
-        
-        for(i=0; i<this.modifiers.length; i++){
+
+        for (i = 0; i < this.modifiers.length; i++) {
             orientation.multiply(orientation, this.modifiers[i].getOrientation());
             var pos = this.modifiers[i].getPosition();
             position.add(pos.x, pos.y, pos.z);
@@ -60,7 +60,7 @@ Ayce.CameraManager = function(){
      * Returns current global camera position.
      * @return {Ayce.Vector3} position
      */
-    this.getGlobalPosition = function(){
+    this.getGlobalPosition = function() {
         return position;
     };
 
@@ -68,11 +68,11 @@ Ayce.CameraManager = function(){
      * Returns current global camera orientation.
      * @return {Ayce.Quaternion} orientation
      */
-    this.getGlobalRotation = function(){
+    this.getGlobalRotation = function() {
         return orientation;
     };
-    
-    this.clearModifiers = function(){
+
+    this.clearModifiers = function() {
         this.modifiers = [];
     };
 
@@ -80,9 +80,9 @@ Ayce.CameraManager = function(){
      * Returns true if WebVR is being used. Not necessarily the case for Cardboard websites.
      * @return {Boolean} isVR
      */
-    this.isInputVR = function(){
-        for(var i=0; i<this.modifiers.length; i++){
-            if(this.modifiers[i] instanceof Ayce.WebVR){
+    this.isInputVR = function() {
+        for (var i = 0; i < this.modifiers.length; i++) {
+            if (this.modifiers[i] instanceof Ayce.WebVR) {
                 return true;
             }
         }
