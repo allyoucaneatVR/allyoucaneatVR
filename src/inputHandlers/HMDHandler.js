@@ -52,51 +52,176 @@ Ayce.HMDHandler = {
 
 
 (function(){
-    if (navigator.getVRDisplays){
-        console.log("Using WebVR 1.0 API");
-        navigator.getVRDisplays().then(onVRDisplay);
+    //WebVR 1.1
+    if (navigator.getVRDisplays && 'VRFrameData' in window){
+        console.log("Using WebVR 1.1 API");
+        navigator.getVRDisplays().then(function(displays){
+            if (displays.length < 1)console.warn("WebVR supported, but no VRDisplays found.");
+            
+            var vrDisplay = displays[0];
+            Ayce.HMDHandler = new WebVRHMDHandler_1_1(vrDisplay, Ayce.HMDHandler.onHMDReady);
+        });
     }
+    //WebVR 1.0
+    else if (navigator.getVRDisplays){
+        console.log("Using WebVR 1.0 API");
+        navigator.getVRDisplays().then(function(displays){
+            if (displays.length < 1)console.warn("WebVR supported, but no VRDisplays found.");
+
+            var vrDisplay = displays[0];
+            Ayce.HMDHandler = new WebVRHMDHandler_1_0(vrDisplay, Ayce.HMDHandler.onHMDReady);
+        });
+    }
+    //Deprecated API
     else if(navigator.getVRDevices){
         console.log("Using WebVR Deprecated API");
-        navigator.getVRDevices().then(onVRDevices);
-    }
+        navigator.getVRDevices().then(function(devices){
+            var i;
+            var vrDevice = null;
+            var positionDevice = null;
 
-    function onVRDisplay(displays){
-        if (displays.length < 1)console.warn("WebVR supported, but no VRDisplays found.");
-
-        var vrDisplay = displays[0];
-        Ayce.HMDHandler = new WebVRHMDHandler(vrDisplay, Ayce.HMDHandler.onHMDReady);
-    }
-    function onVRDevices(devices){
-        var vrDevice = null;
-        var positionDevice = null;
-
-        //HMD
-        for(var i in devices){
-            if(devices[i] instanceof HMDVRDevice){
-                vrDevice = devices[i];
-                break;
+            //HMD
+            for(i in devices){
+                if(devices[i] instanceof HMDVRDevice){
+                    vrDevice = devices[i];
+                    break;
+                }
             }
-        }
 
-        //Position
-        for(var i in devices){
-            if(devices[i] instanceof PositionSensorVRDevice){
-                positionDevice = devices[i];
-                break;
+            //Position
+            for(i in devices){
+                if(devices[i] instanceof PositionSensorVRDevice){
+                    positionDevice = devices[i];
+                    break;
+                }
             }
-        }
 
-        //
-        Ayce.HMDHandler = new WebVRHMDHandler_Deprecated(vrDevice, positionDevice, Ayce.HMDHandler.onHMDReady);
-        if(Ayce.HMDHandler.onHMDReady){
-            Ayce.HMDHandler.onHMDReady();
-        }
+            //
+            Ayce.HMDHandler = new WebVRHMDHandler_Deprecated(vrDevice, positionDevice, Ayce.HMDHandler.onHMDReady);
+            if(Ayce.HMDHandler.onHMDReady){
+                Ayce.HMDHandler.onHMDReady();
+            }
+        });
     }
-
 })();
 
-function WebVRHMDHandler(vrDisplay, onReady){
+function WebVRHMDHandler_1_1(vrDisplay, onReady){
+    this.onHMDReady = onReady;
+
+    var frameData = new VRFrameData();
+    var hmdInitialized = true;
+    var eyeParamsL = vrDisplay.getEyeParameters( 'left' );
+    var eyeParamsR = vrDisplay.getEyeParameters( 'right' );
+    var position = new Ayce.Vector3();
+    var orientation = new Ayce.Quaternion();
+    var currentPose = vrDisplay.getPose();
+
+    window.addEventListener('vrdisplaypresentchange', onVRPresentChange, false);
+
+    this.update = function(){
+        if (vrDisplay.getFrameData(frameData)) {
+          currentPose = frameData.pose;
+        }
+    };
+
+    this.getPosition = function(){
+        var p = currentPose.position;
+        if(p)position.set(p[0], p[1], p[2]);
+        return position;
+    };
+
+    this.getRotation = function(){
+        var o = currentPose.orientation;
+        orientation.set(o[0], o[1], o[2], o[3]);
+        return orientation;
+    };
+
+    /**
+     * Description
+     */
+    this.resetSensor = function () {
+        vrDisplay.resetPose();
+    };
+
+    this.showInHMD = function(canvas){
+        vrDisplay.requestPresent([{ source: canvas }]).then(function () {
+            //...
+        }, function () {
+          console.warn("vrDisplay: requestPresent failed.");
+        });
+    };
+
+    this.exitHMD = function(){
+        vrDisplay.exitPresent().then(function () {
+            //...
+        }, function () {
+          console.warn("vrDisplay: exitPresent failed.");
+        });
+    };
+
+    function onVRPresentChange(state){
+        console.log("Presenting in HMD: ",  state);
+    }
+
+    this.isHMDReady = function(){
+        return hmdInitialized;
+    };
+
+    this.renderToHMD = function(){
+        if(vrDisplay.isPresenting){
+            vrDisplay.submitFrame(currentPose);
+        }
+    };
+
+    this.getAnimFrame = function(func){
+        if(vrDisplay && vrDisplay.isPresenting){
+            vrDisplay.requestAnimationFrame(func);
+            return true;
+        }
+        return false;
+    };
+
+    /**
+     * Description
+     * @return BinaryExpression
+     */
+    this.isWebVRReady = function(){
+        return Boolean(navigator.getVRDisplays||navigator.getVRDevices);
+    };
+
+    this.getEyeTranslationL = function(){
+        return eyeParamsL.offset[0];
+    };
+
+    this.getEyeTranslationR = function(){
+        return eyeParamsR.offset[0];
+    };
+
+    this.getEyeFOVL = function(){
+        return eyeParamsL.fieldOfView;
+    };
+
+    this.getEyeFOVR = function(){
+        return eyeParamsR.fieldOfView;
+    };
+
+    this.getEyeWidthR = function(){
+        return eyeParamsR.renderWidth;
+    };
+
+    this.getEyeWidthL = function(){
+        return eyeParamsL.renderWidth;
+    };
+
+    this.getEyeHeightR = function(){
+        return eyeParamsR.renderHeight;
+    };
+
+    this.getEyeHeightL = function(){
+        return eyeParamsL.renderHeight;
+    };
+}
+function WebVRHMDHandler_1_0(vrDisplay, onReady){
     this.onHMDReady = onReady;
     var hmdInitialized = true;
     var eyeParamsL = vrDisplay.getEyeParameters( 'left' );
