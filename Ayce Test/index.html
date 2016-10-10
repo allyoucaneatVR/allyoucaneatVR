@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <script src="../src/allyoucaneatVR.js"></script>
+    
+    <script src="../src/math/Vector2.js"></script>
+    <script src="../src/math/Vector3.js"></script>
+    <script src="../src/math/Matrix3.js"></script>
+    <script src="../src/math/Matrix4.js"></script>
+    <script src="../src/math/Quaternion.js"></script>
+    <script src="../src/math/Geometry.js"></script>
+    
+    <script src="../src/inputHandlers/GamepadHandler.js"></script>
+    <script src="../src/inputHandlers/HMDHandler.js"></script>
+    <script src="../src/inputHandlers/KeyboardHandler.js"></script>
+    <script src="../src/inputHandlers/MouseHandler.js"></script>
+    <script src="../src/inputHandlers/SensorsHandler.js"></script>
+    
+    <script src="../src/objects/loader/OBJLoader.js"></script>
+        
+    <script src="../src/stage/Scene.js"></script>
+    <script src="../src/stage/Light.js"></script>
+    <script src="../src/stage/Timer.js"></script>
+    <script src="../src/stage/XMLLoader.js"></script>
+    
+    <script src="../src/stage/buffer/Buffer.js"></script>
+    <script src="../src/stage/buffer/BufferMulti.js"></script>
+    <script src="../src/stage/buffer/Shader.js"></script>
+    <script src="../src/stage/buffer/ShaderGenerator.js"></script>
+    
+    <script src="../src/stage/camera/Camera.js"></script>
+    <script src="../src/stage/camera/CameraManager.js"></script>
+    <script src="../src/stage/camera/cameraModifiers/CameraModifier.js"></script>
+    <script src="../src/stage/camera/cameraModifiers/Cardboard.js"></script>
+    <script src="../src/stage/camera/cameraModifiers/Gamepad.js"></script>
+    <script src="../src/stage/camera/cameraModifiers/MouseKeyboard.js"></script>
+    <script src="../src/stage/camera/cameraModifiers/WebVR.js"></script>
+    
+    <script src="../src/stage/renderer/Renderer.js"></script>
+    <script src="../src/stage/renderer/VRRenderer.js"></script>
+    
+    <script src="../src/stage/sound/Sound.js"></script>
+    <script src="../src/stage/sound/AudioContext.js"></script>
+    
+    <script src="../src/objects/Object3D.js"></script>
+    <script src="../src/objects/examples/Cube3D.js"></script>
+    <script src="../src/objects/examples/Pyramid3D.js"></script>
+    <script src="../src/objects/examples/Sphere3D.js"></script>
+    <script src="../src/objects/examples/Square.js"></script>
+    
+    <script src="../src/objects/types/ParticleSystem.js"></script>
+    <script src="../src/objects/types/Skybox.js"></script>
+    <script src="../src/objects/types/VRSquare.js"></script>
+    
+    <script src="stats.min.js"></script>
+    <script src="main.js"></script>
+</head>
+
+<body style="margin: 0">
+    <div style="position: relative; width: 100%; height: 100%;">
+        <canvas id="ayce_canvas"></canvas>
+    </div>
+    <div style="position: absolute;top: 0px; background-color: white;">
+        <div id="enter-hmd">Enter HMD</div>
+        <div id="exit-hmd">Exit HMD</div>
+    </div>
+</body>
+
+</html>
