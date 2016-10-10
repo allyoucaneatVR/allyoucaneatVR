@@ -1,0 +1,22 @@
+{
+    "name": "aycevr",
+    "version": "0.1.0",
+    "description": "A WebVR JavaScript 3D engine",
+    "main": "src/allyoucaneatVR.js",
+    "scripts": {
+        "build": "node compile.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/allyoucaneatVR/allyoucaneatVR.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/allyoucaneatVR/allyoucaneatVR/issues"
+    },
+    "homepage": "https://github.com/allyoucaneatVR/allyoucaneatVR#readme",
+    "devDependencies": {
+        "uglify-js": "^2.7.3"
+    }
+}
