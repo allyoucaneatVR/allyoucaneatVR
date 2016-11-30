@@ -14,6 +14,8 @@
  */
 Ayce.Skybox = function (front, back, top, bottom, right, left, prefix, camera, farPlane) {
 
+    Ayce.Object3D.call(this);
+
     this.isSkybox = true;
     this.imageSrc = [prefix+front, prefix+back, prefix+top, prefix+bottom, prefix+right, prefix+left];
     this.parent = camera;
