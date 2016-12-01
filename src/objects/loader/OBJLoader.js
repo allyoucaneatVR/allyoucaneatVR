@@ -6,17 +6,30 @@
  * Creates new loader for a wavefront object (*.obj)
  * @class
  * @param pathString
+ * @param [objString]
+ * @param [mtlString]
+ * @param [isData]
  * @returns {Ayce.Object3D[]} object
  * @constructor
  */
-Ayce.OBJLoader = function (pathString) {
+Ayce.OBJLoader = function (pathString, objString, mtlString, isData) {
     //Modified version of THREE.js' OBJLoader
-    var pathFile = /(.*[\/|\\])(.*)/;
-    var path = pathFile.exec(pathString)[1];
-    var file = pathFile.exec(pathString)[2];
-    var objTxt = Ayce.XMLLoader.getSourceSynch(path+file);
-    var mtlName = this.getMtlName(objTxt);
-    var mtlTxt = Ayce.XMLLoader.getSourceSynch(path+mtlName);
+
+    isData = (!(isData == undefined || isData == false));
+
+    var objTxt;
+    var mtlTxt;
+    if(!isData){
+        var pathFile = /(.*[\/|\\])(.*)/;
+        var path = pathFile.exec(pathString)[1];
+        var file = pathFile.exec(pathString)[2];
+        objTxt = Ayce.XMLLoader.getSourceSynch(path+file);
+        var mtlName = this.getMtlName(objTxt);
+        mtlTxt = Ayce.XMLLoader.getSourceSynch(path+mtlName);
+    }else{
+        objTxt = objString;
+        mtlTxt = mtlString;
+    }
 
 //    console.log("Processing .obj file");
     var objs = this.readObj(objTxt);
@@ -96,9 +109,9 @@ Ayce.OBJLoader.prototype = {
             else if ((result = vertex_pattern.exec(line)) !== null) {
 
                 currentObj.vertices.push([
-                        parseFloat(result[1]),
-                        parseFloat(result[2]),
-                        parseFloat(result[3])]
+                    parseFloat(result[1]),
+                    parseFloat(result[2]),
+                    parseFloat(result[3])]
                 );
 
             }
@@ -106,9 +119,9 @@ Ayce.OBJLoader.prototype = {
             else if ((result = normal_pattern.exec(line)) !== null) {
 
                 currentObj.normals.push([
-                        parseFloat(result[1]),
-                        parseFloat(result[2]),
-                        parseFloat(result[3])]
+                    parseFloat(result[1]),
+                    parseFloat(result[2]),
+                    parseFloat(result[3])]
                 );
 
             }
@@ -428,7 +441,7 @@ Ayce.OBJLoader.prototype = {
         if(originO3D.textureIndices)newO3D.textureIndices = originO3D.textureIndices.slice();
         if(originO3D.normals)       newO3D.normals        = originO3D.normals.slice();
         if(originO3D.indices)       newO3D.indices        = originO3D.indices.slice();
-        
+
         newO3D.imageSrc = originO3D.imageSrc;
         return newO3D;
     }
