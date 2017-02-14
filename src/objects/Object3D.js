@@ -83,6 +83,9 @@ Ayce.Object3D = function () {
     //Hide or hide object
     this.visible = true;
 
+    //Color used to identify object when picking
+    this.identifier = null;
+
     //Log generated shader to console
     this.logVertexShader = false;
     this.logFragmentShader = false;

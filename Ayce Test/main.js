@@ -64,6 +64,12 @@ function initAyceScene(){
         }
     }
     console.log(c);
+
+    //Enable object picking
+    scene.enablePicking();
+    document.addEventListener("click", function(e){
+        console.log(scene.pickObjectAt(e.clientX, e.clientY));
+    });
 }
 
 function update() {

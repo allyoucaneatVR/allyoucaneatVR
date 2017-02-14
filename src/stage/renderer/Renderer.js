@@ -13,7 +13,7 @@ Ayce.Renderer = function (canvas) {
     var gl;
     var i = 0;
     var scope = this;
-    
+
     this.width = 0;
     this.height = 0;
     this.clearColor = {
@@ -21,6 +21,9 @@ Ayce.Renderer = function (canvas) {
         green: 0.0,
         blue: 0.0
     };
+
+    var objectIdentificationBuffer, objectIdentificationTexture;
+    var identificationColor = new Uint8Array(4);
 
     /*********************************************
      *
@@ -48,6 +51,31 @@ Ayce.Renderer = function (canvas) {
         gl.viewportWidth = canvas.width;
         gl.viewportHeight = canvas.height;
         scope.setViewportAndScissor(0, 0, gl.viewportWidth, gl.viewportHeight);
+    };
+
+    this.enableScreenSpacePicking = function(){
+        objectIdentificationBuffer = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, objectIdentificationBuffer);
+        objectIdentificationBuffer.width = canvas.width;
+        objectIdentificationBuffer.height = canvas.height;
+
+        objectIdentificationTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, objectIdentificationTexture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, objectIdentificationBuffer.width, objectIdentificationBuffer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+        var renderBuffer = gl.createRenderbuffer();
+        gl.bindRenderbuffer(gl.RENDERBUFFER, renderBuffer);
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, objectIdentificationBuffer.width, objectIdentificationBuffer.height);
+
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, objectIdentificationTexture, 0);
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderBuffer);
+
+        gl.bindTexture(gl.TEXTURE_2D, null);
+        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     };
 
     // starts WebGL initialization
@@ -105,6 +133,36 @@ Ayce.Renderer = function (canvas) {
         for(i=0; i < transparentObjects.length; i++){
             transparentObjects[i].buffer.update(camera);
         }
+    };
+
+    /**
+     * Returns object identifier at given screen-space coordinates if picking is enabled.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Ayce.Object3D[]} identificationBufferObjects
+     * @param {Ayce.CameraManager} camera
+     */
+    this.getObjectIdentifierAt = function(x, y, identificationBufferObjects, camera){
+        gl.bindFramebuffer(gl.FRAMEBUFFER, objectIdentificationBuffer);
+        scope.setViewportAndScissor(0, 0, objectIdentificationBuffer.width, objectIdentificationBuffer.height);
+
+        for(i=0; i < identificationBufferObjects.length; i++){
+            identificationBufferObjects[i].buffer.update(camera);
+        }
+
+        var buffer;
+        // Render objects off-screen for picking
+        for (i = 0; i < identificationBufferObjects.length; i++) {
+            buffer = identificationBufferObjects[i].buffer;
+            buffer.render();
+        }
+
+        gl.readPixels(x, canvas.height-y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, identificationColor);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        scope.setViewportAndScissor(0, 0, gl.viewportWidth, gl.viewportHeight);
+
+        return identificationColor;
     };
 
     /**
