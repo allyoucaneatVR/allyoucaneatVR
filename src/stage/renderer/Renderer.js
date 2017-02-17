@@ -177,14 +177,18 @@ Ayce.Renderer = function (canvas) {
         var buffer;
         // Render opaque objects
         for (i=0; i<objects.length; i++) {
-            buffer = objects[i].buffer;
-            buffer.render();
+            if(objects[i].visible) {
+                buffer = objects[i].buffer;
+                buffer.render();
+            }
         }
 
         // Render transparent objects
         for (i=0; i<transparentObjects.length; i++) {
-            buffer = transparentObjects[i].buffer;
-            buffer.render();
+            if (objects[i].visible){
+                buffer = transparentObjects[i].buffer;
+                buffer.render();
+            }
         }
     };
 

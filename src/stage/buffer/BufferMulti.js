@@ -191,7 +191,7 @@ Ayce.BufferMulti = function (gl, object3D, lightContainer) {
      * Renders buffer
      */
     this.render = function(){
-        if(!object3D.visible)return;
+        //if(!object3D.visible)return;
         buffer.render();
     };
 
@@ -231,7 +231,7 @@ Ayce.BufferMulti = function (gl, object3D, lightContainer) {
      * @param {String} eye
      */
     this.renderVR = function(eye){
-        if(!object3D.visible)return;
+        //if(!object3D.visible)return;
         if(eye === "left"){
             modelViewMatrix.data = leftMatrix.data;
             uniformValues.normalMatrix.data = leftNormalMatrix.data;

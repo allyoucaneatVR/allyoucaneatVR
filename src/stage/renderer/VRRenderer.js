@@ -286,7 +286,7 @@ Ayce.VRRenderer = function (canvas, distorted, cameraController) {
      */
     function renderObjects (objects, eye) {
         for (var i=0; i<objects.length; i++) {
-            objects[i].buffer.renderVR(eye);
+            if(objects[i].visible)objects[i].buffer.renderVR(eye);
         }
     }
 };

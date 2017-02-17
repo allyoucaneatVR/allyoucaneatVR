@@ -30,6 +30,7 @@ function initAyce(){
     initAyceScene();
     update();
 }
+var cube2;
 
 function initAyceScene(){
     //Place lights
@@ -63,6 +64,13 @@ function initAyceScene(){
             }
         }
     }
+
+    cube2 = (new Ayce.Geometry.Box(1,1,1)).getO3D();
+    cube2.position.z = -2;
+    cube2.position.y = -0.5;
+    cube2.position.x = -0.5;
+    scene.addToScene(cube2);
+
     console.log(c);
 
     //Enable object picking
@@ -71,8 +79,8 @@ function initAyceScene(){
         console.log(scene.pickObjectAt(e.clientX, e.clientY));
     });
 }
-
 function update() {
+    cube2.position.x = Math.sin(Date.now()/1000)-0.5;
     scene.updateScene();
     stats.begin();
     scene.drawScene();

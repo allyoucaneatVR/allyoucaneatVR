@@ -224,10 +224,10 @@ Ayce.Scene = function (canvas) {
 
         //update objects
         for(i=0; i < objects.length; i++){
-            objects[i].update();
+            if(objects[i].visible)objects[i].update();
         }
         for(i=0; i < transparentObjects.length; i++){
-            transparentObjects[i].update();
+            if(transparentObjects[i].visible)transparentObjects[i].update();
         }
 
         renderer.update(camera, objects, transparentObjects);
