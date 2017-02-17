@@ -10,6 +10,7 @@
 Ayce.Scene = function (canvas) {
     var scope = this;
     var i = 0;
+    var j = 0;
     var recalcBuffers = true;
     var camera = new Ayce.Camera(new Ayce.CameraManager());
     var audioContext = new Ayce.AudioContext();
@@ -290,11 +291,15 @@ Ayce.Scene = function (canvas) {
     };
 
     var calcO3DBuffers = function(o3DArray){
-        for(i=0; i < o3DArray.length; i++){
-            if(o3DArray[i].buffer){
-                o3DArray[i].buffer.dispose();
+        for(var i=0; i < o3DArray.length; i++){
+            if(o3DArray[i] instanceof Ayce.LODObject3D) {
+                calcO3DBuffers(o3DArray[i].geometries);
+            }else {
+                if (o3DArray[i].buffer) {
+                    o3DArray[i].buffer.dispose();
+                }
+                o3DArray[i].buffer = renderer.getBuffer(o3DArray[i], lightContainer);
             }
-            o3DArray[i].buffer = renderer.getBuffer(o3DArray[i], lightContainer);
         }
     };
 
@@ -302,13 +307,24 @@ Ayce.Scene = function (canvas) {
      * Adds light, object or sound to scene
      * @param {Ayce.Light|Ayce.Object3D|Ayce.Sound} object
      * @param {Boolean} [enablePicking]
+     * @param {Boolean} [useIdentifier]
      */
-    this.addToScene = function (object, enablePicking) {
+    this.addToScene = function (object, enablePicking, useIdentifier) {
+
+        if (enablePicking == undefined) enablePicking = true;
 
         //Add Light to Scene
         if (object instanceof Ayce.Light) {
             lightContainer.addLight(object);
             recalcBuffers = true;
+        }
+        //Add Geometries within Level of Detail Object to Scene
+        else if(object instanceof Ayce.LODObject3D){
+            if(enablePicking) assignObjectIdentifier(object, false);
+            for(i = 0; i < object.geometries.length; i++){
+                scope.addToScene(object.geometries[i], false, object.identifier);
+            }
+            objects.push(object);
         }
 
         //Add O3D to Scene
@@ -319,52 +335,22 @@ Ayce.Scene = function (canvas) {
             object.calcBoundingBox();
             object.calcBoundingSphere();
 
-            if(!object.identifier) {
-                if (enablePicking == undefined) enablePicking = true;
-
-                if (enablePicking) {
-                    if (currentIdentifier.b < 0.999998)
-                        currentIdentifier.b += 1 / 255;
-                    else if (currentIdentifier.g < 0.999998) {
-                        currentIdentifier.b = 0;
-                        currentIdentifier.g += 1 / 255;
-                    } else if (currentIdentifier.r < 0.999998) {
-                        currentIdentifier.b = 0;
-                        currentIdentifier.g = 0;
-                        currentIdentifier.r += 1 / 255;
-                    } else
-                        console.error("Depth of identification buffer is reached");
-
-                    object.identifier = new Uint8Array(4);
-                    object.identifier[0] = Math.round(currentIdentifier.r * 255);
-                    object.identifier[1] = Math.round(currentIdentifier.g * 255);
-                    object.identifier[2] = Math.round(currentIdentifier.b * 255);
-                    object.identifier[3] = Math.round(255);
-
-                    var copy = new Ayce.Object3D();
-                    for (var attr in object) {
-                        if (object.hasOwnProperty(attr)) copy[attr] = object[attr];
-                    }
-                    copy.colors = [];
-                    for (var i = 0; i < copy.vertices.length / 3; i++) {
-                        copy.colors.push(object.identifier[0] / 255, object.identifier[1] / 255, object.identifier[2] / 255, 1);
-                    }
-
-                    copy.imgSrc = null;
-                    copy.transparent = false;
-                    copy.isWireframe = false;
-                    copy.normals = null;
-
-                    copy.buffer = renderer.getBuffer(copy, lightContainer);
-                    identificationBufferObjects.push(copy);
+            if(useIdentifier != undefined){
+                object.identifier = useIdentifier;
+                addCopyToIdentificationBuffer(object)
+            }else{
+                if (enablePicking && !object.identifier) {
+                    assignObjectIdentifier(object, true)
                 }
             }
 
-            if(object.transparent){
-                transparentObjects.push(object);
-            }
-            else{
-                objects.push(object);
+            if(useIdentifier == undefined) {
+                if (object.transparent) {
+                    transparentObjects.push(object);
+                }
+                else {
+                    objects.push(object);
+                }
             }
         }
 
@@ -380,6 +366,48 @@ Ayce.Scene = function (canvas) {
         }
     };
 
+    function assignObjectIdentifier(object, hasGeometry){
+        if (currentIdentifier.b < 0.999998)
+            currentIdentifier.b += 1 / 255;
+        else if (currentIdentifier.g < 0.999998) {
+            currentIdentifier.b = 0;
+            currentIdentifier.g += 1 / 255;
+        } else if (currentIdentifier.r < 0.999998) {
+            currentIdentifier.b = 0;
+            currentIdentifier.g = 0;
+            currentIdentifier.r += 1 / 255;
+        } else
+            console.error("Depth of identification buffer is reached");
+
+        object.identifier = new Uint8Array(4);
+        object.identifier[0] = Math.round(currentIdentifier.r * 255);
+        object.identifier[1] = Math.round(currentIdentifier.g * 255);
+        object.identifier[2] = Math.round(currentIdentifier.b * 255);
+        object.identifier[3] = Math.round(255);
+
+        if(hasGeometry) {
+            addCopyToIdentificationBuffer(object)
+        }
+    }
+    function addCopyToIdentificationBuffer(object){
+        var copy = new Ayce.Object3D();
+        for (var attr in object) {
+            if (object.hasOwnProperty(attr)) copy[attr] = object[attr];
+        }
+        copy.colors = [];
+        for (var i = 0; i < copy.vertices.length / 3; i++) {
+            copy.colors.push(object.identifier[0] / 255, object.identifier[1] / 255, object.identifier[2] / 255, 1);
+        }
+
+        copy.imgSrc = null;
+        copy.transparent = false;
+        copy.isWireframe = false;
+        copy.normals = null;
+
+        copy.buffer = renderer.getBuffer(copy, lightContainer);
+        identificationBufferObjects.push(copy);
+    }
+
     /**
      * Removes light, object or sound from scene
      * @param {Ayce.Light|Ayce.Object3D|Ayce.Sound} object
@@ -391,6 +419,29 @@ Ayce.Scene = function (canvas) {
         }
         //Remove o3D from Scene
         else if (object instanceof Ayce.Object3D) {
+            if (object instanceof Ayce.LODObject3D) {
+                for (j = 0; j < object.geometries.length; j++) {
+                    for (i = 0; i < identificationBufferObjects.length; i++) {
+                        if (    //property values are compared because objects in id buffer is copy of original
+                        identificationBufferObjects[i].identifier[0] == object.geometries[j].identifier[0] &&
+                        identificationBufferObjects[i].identifier[1] == object.geometries[j].identifier[1] &&
+                        identificationBufferObjects[i].identifier[2] == object.geometries[j].identifier[2]
+                        ) {
+                            identificationBufferObjects.splice(i, 1);
+                        }
+                    }
+                }
+            }else{
+                for (i = 0; i < identificationBufferObjects.length; i++) {
+                    if (    //property values are compared because objects in id buffer is copy of original
+                    identificationBufferObjects[i].identifier[0] == object.identifier[0] &&
+                    identificationBufferObjects[i].identifier[1] == object.identifier[1] &&
+                    identificationBufferObjects[i].identifier[2] == object.identifier[2]
+                    ) {
+                        identificationBufferObjects.splice(i, 1);
+                    }
+                }
+            }
             for (i=0; i < objects.length; i++) {
                 if (objects[i] === object) {
                     objects.splice(i, 1);
@@ -399,11 +450,6 @@ Ayce.Scene = function (canvas) {
             for (i=0; i < transparentObjects.length; i++) {
                 if (transparentObjects[i] === object) {
                     transparentObjects.splice(i, 1);
-                }
-            }
-            for (i=0; i < identificationBufferObjects.length; i++) {
-                if (identificationBufferObjects[i] === object) {
-                    identificationBufferObjects.splice(i, 1);
                 }
             }
         }

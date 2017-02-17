@@ -30,7 +30,6 @@ function initAyce(){
     initAyceScene();
     update();
 }
-var cube2;
 
 function initAyceScene(){
     //Place lights
@@ -65,13 +64,10 @@ function initAyceScene(){
         }
     }
 
-    cube2 = (new Ayce.Geometry.Box(1,1,1)).getO3D();
-    cube2.position.z = -2;
-    cube2.position.y = -0.5;
-    cube2.position.x = -0.5;
-    scene.addToScene(cube2);
-
-    console.log(c);
+    //Place level of detail object
+    var lod = new Ayce.LODObject3D([(new Ayce.Geometry.Box(1,1,1)).getO3D(false), (new Ayce.Geometry.Sphere(1)).getO3D()], 1, scene.getCamera().getManager());
+    lod.position.z = -5;
+    scene.addToScene(lod);
 
     //Enable object picking
     scene.enablePicking();
@@ -80,7 +76,6 @@ function initAyceScene(){
     });
 }
 function update() {
-    cube2.position.x = Math.sin(Date.now()/1000)-0.5;
     scene.updateScene();
     stats.begin();
     scene.drawScene();
