@@ -185,7 +185,7 @@ Ayce.Renderer = function (canvas) {
 
         // Render transparent objects
         for (i=0; i<transparentObjects.length; i++) {
-            if (objects[i].visible){
+            if (transparentObjects[i].visible){
                 buffer = transparentObjects[i].buffer;
                 buffer.render();
             }
